@@ -29,19 +29,22 @@ The project follows this general process:
 ## Setup
 
 ### 1. Clone the repository
+
 ```
 git clone https://github.com/datafuselabs/askbend
 cd askbend
 ```
 
 ### 2. Build the project
+
 ```
 make setup
 make build
 ```
 
-### 3. Create a database in your Databend Cloud:
-schema/table.sql:
+### 3. Create a database in your Databend Cloud
+
+[table](schema/table.sql):
 ```
 CREATE DATABASE askbend;
 USE askbend;
@@ -49,7 +52,8 @@ USE askbend;
 CREATE TABLE doc (path VARCHAR, content VARCHAR, embedding ARRAY(FLOAT32));
 ```
 
-### 4. Modify the configuration file `conf/askbend.toml`:
+### 4. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
+
 ```
 # Usage:
 # askbend -c askbend.toml
@@ -74,7 +78,8 @@ rebuild = false
 
 ### 5. Prepare your Markdown files by copying them to the data/ directory
 
-### 6. Parse the Markdown files and generate embeddings:
+### 6. Parse the Markdown files and generate embeddings
+
 ```
 ./target/release/askbend -c conf/askbend.toml --rebuild
 
@@ -90,7 +95,7 @@ rebuild = false
 
 The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files. When the embedding is complete, the API server will start.
 
-### 7. Query your Markdown knowledge base using the API:
+### 7. Query your Markdown knowledge base using the API
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/query
 ```
@@ -99,4 +104,30 @@ Response:
 {"result":["\n\nYou can use the `COPY INTO <table>` command to copy data from an internal stage, Amazon S3 bucket, or a remote file into a table in Databend. \n\nFor example, to copy data from an internal stage, you can use the following command:\n\n```\nCOPY INTO <table>\nFROM (\n    SELECT <columns>\n    FROM @<stage>\n    FILE_FORMAT = (TYPE = PARQUET)\n)\n```\n\nFor more information, please refer to the [Tutorial: Load from an internal stage](../../12-load-data/00-stage.md) and [Tutorial: Load from an Amazon S3 bucket](../../12-load-data/01-s3.md) sections in the Databend documentation."]}
 ```
 
+## AskBend Query API
 
+This API document describes how to use the Databend query API to submit queries and receive results.
+
+### Endpoint
+
+http://<your-ip>:8081/query
+
+### Request
+
+The request body should be a JSON object containing a single field `query`, which is the query string.
+
+**Example:**
+
+```json
+{
+    "query": "whats the fast way to load data to databend"
+}
+```
+
+### Response
+
+On successful query execution, the API will return a 200 OK status code, along with a JSON object containing the field result.
+
+The result field is an array of strings. However, we only need to consider the first string in the array as the final result. 
+
+The API assumes that if the query was successful, the first item in the result array is the most relevant answer.
