@@ -14,7 +14,6 @@
 
 use anyhow::Result;
 use databend_driver::DatabendConnection;
-use log::debug;
 use log::info;
 use tokio::time::Instant;
 use tokio_stream::StreamExt;
@@ -87,7 +86,9 @@ impl DatabendDriver {
     /// Get a similarly content.
     pub async fn query(&self, query: &str) -> Result<Vec<String>> {
         let mut similar_sections = vec![];
+        let mut similar_distances = vec![];
 
+        info!("query coming: {}", query);
         info!("distance query start");
         let now = Instant::now();
         // Retrieve sections with the highest similarity to the input query.
@@ -106,16 +107,17 @@ impl DatabendDriver {
             while let Some(row) = rows.next().await {
                 let section_tuple: RowResult = row?.try_into()?;
                 similar_sections.push(section_tuple.0);
+                similar_distances.push(section_tuple.1);
             }
         }
-        info!("distance query end, cost:{}", now.elapsed().as_millis());
+        info!("distance query end cost:{:?}", now.elapsed().as_secs());
+        info!("distance similar distances: {:?}", similar_distances);
+        info!("distance similar sections: {:?}", similar_sections);
 
-        debug!("query: {}, similar sections:{:?}", query, similar_sections);
-
-        info!("query similar start");
         let now = Instant::now();
         // Perform text completion if similar sections are found.
         if !similar_sections.is_empty() {
+            info!("query completion start");
             let sections_text = similar_sections.to_vec().join(" ");
             let prompt = format!(
                 r#"You are an enthusiastic Databend representative who is passionate about helping people! Using the provided sections from the Databend documentation. If the answer is not explicitly available in the documentation or you are unsure, respond with "Sorry, I dont know how to help with that." Ensure that the SQL syntax remains unmodified.
@@ -145,7 +147,7 @@ impl DatabendDriver {
                 text_completions.push(text_completion.0);
             }
 
-            info!("query similar end, cost:{:?}", now.elapsed().as_millis());
+            info!("query completion end, cost:{:?}", now.elapsed().as_secs());
             return Ok(text_completions);
         }
 
