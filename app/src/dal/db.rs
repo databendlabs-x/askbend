@@ -118,8 +118,7 @@ impl DatabendDriver {
         if !similar_sections.is_empty() {
             let sections_text = similar_sections.to_vec().join(" ");
             let prompt = format!(
-                r#"
-                You are an enthusiastic Databend representative who is passionate about helping people! Using the provided sections from the Databend documentation, answer the question in markdown format. If the answer is not explicitly available in the documentation or you are unsure, respond with "Sorry, I don't know how to help with that." Ensure that the SQL syntax remains unmodified.
+                r#"You are an enthusiastic Databend representative who is passionate about helping people! Using the provided sections from the Databend documentation. If the answer is not explicitly available in the documentation or you are unsure, respond with "Sorry, I dont know how to help with that." Ensure that the SQL syntax remains unmodified.
                 
                 Documentation sections:
                 {}
@@ -132,7 +131,7 @@ impl DatabendDriver {
                 sections_text, query
             );
             let prompt_sql = format!(
-                "SELECT ai_text_completion('{}')",
+                "SELECT ai_text_completion('{}') as q",
                 escape_sql_string(&prompt)
             );
             info!("prompt sql:{}", prompt_sql);
