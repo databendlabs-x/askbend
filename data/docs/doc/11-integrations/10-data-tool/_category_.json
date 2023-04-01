@@ -1,0 +1,7 @@
+{
+  "label": "Ingest",
+  "link": {
+    "type": "generated-index",
+    "slug": "/integrations/data"
+  }
+}

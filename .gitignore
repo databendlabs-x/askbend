@@ -1,0 +1,19 @@
+# IntelliJ project files
+.idea/*
+
+# visual studio code files
+.vscode
+.dir-locals.el
+.bash_history
+
+# Rust
+target/
+
+# Test
+_test_output_dir
+outputs
+_datas
+_logs
+
+# Build
+docker/release/
