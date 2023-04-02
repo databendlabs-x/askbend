@@ -108,6 +108,9 @@ pub struct QueryConfig {
     #[clap(long = "min_content_length", default_value_t = 50)]
     pub min_content_length: usize,
 
+    #[clap(long = "max_content_length", default_value_t = 8000)]
+    pub max_content_length: usize,
+
     #[clap(long = "top", default_value_t = 2)]
     pub top: usize,
 }
@@ -116,6 +119,7 @@ impl Default for QueryConfig {
     fn default() -> Self {
         QueryConfig {
             min_content_length: 50,
+            max_content_length: 8000,
             top: 2,
         }
     }

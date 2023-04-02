@@ -27,6 +27,7 @@ pub struct DatabendDriver {
     pub database: String,
     pub table: String,
     pub min_content_length: usize,
+    pub max_content_length: usize,
     pub top: usize,
     pub conn: DatabendConnection,
 }
@@ -38,6 +39,7 @@ impl DatabendDriver {
             database: conf.database.database.clone(),
             table: conf.database.table.clone(),
             min_content_length: conf.query.min_content_length,
+            max_content_length: conf.query.max_content_length,
             top: conf.query.top,
             conn,
         })
@@ -74,8 +76,8 @@ impl DatabendDriver {
     /// update the table embedding
     pub async fn embedding(&self) -> Result<()> {
         let sql = format!(
-            "UPDATE {}.{} SET embedding = ai_embedding_vector(concat(path, content)) WHERE length(embedding)=0",
-            self.database, self.table
+            "UPDATE {}.{} SET embedding = ai_embedding_vector(left(content,{}))) WHERE length(embedding)=0",
+            self.database, self.table, self.max_content_length,
         );
 
         let res = self.conn.exec(&sql).await;
