@@ -10,9 +10,9 @@ The project automatically generates document embeddings from the content, enabli
 
 SQL-Based means you don't need any OpenAI API knowledge. With the Databend Cloud platform, you can perform these tasks using SQL. Some SQL AI functions of Databend Cloud include:
 
-- `ai_embedding_vector`: Get the vector from OpenAI API
-- `ai_text_completion`: Get the completion of a text
-- `cosine_distance`: Calculate the distance between embedding vectors
+- [ai_embedding_vector](https://databend.rs/doc/sql-functions/ai-functions/ai-embedding-vector): Get the vector from OpenAI API
+- [ai_text_completion](https://databend.rs/doc/sql-functions/ai-functions/ai-text-completion): Get the completion of a text
+- [cosine_distance](https://databend.rs/doc/sql-functions/ai-functions/ai-cosine-distance): Calculate the distance between embedding vectors
 
 ## Overview
 
@@ -72,13 +72,11 @@ dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/defa
 [server]
 host = "0.0.0.0"
 port = 8081
-# If true, will insert and embedding all for path/*.
-rebuild = false
 ```
 
 ### 5. Prepare your Markdown files by copying them to the data/ directory
 
-### 6. Parse the Markdown files and generate embeddings
+### 6. Parse the Markdown files and build embeddings
 
 ```
 ./target/release/askbend -c conf/askbend.toml --rebuild
@@ -89,13 +87,19 @@ rebuild = false
 [2023-04-01T07:17:14Z INFO ] Step-2: finish insert to table
 [2023-04-01T07:17:14Z INFO ] Step-3: begin generate embedding, may take some minutes
 [2023-04-01T07:26:03Z INFO ] Step-3: finish generate embedding
-[2023-04-01T07:26:03Z INFO ] Step-4: start api server 0.0.0.0:8081
 ... ...
 ```
 
 The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files. When the embedding is complete, the API server will start.
 
-### 7. Query your Markdown knowledge base using the API
+
+### 7. Start the API server
+
+```
+./target/release/askbend -c conf/askbend.toml
+```
+
+### 8. Query your Markdown knowledge base using the API
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/query
 ```

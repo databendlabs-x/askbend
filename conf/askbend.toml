@@ -15,5 +15,3 @@ dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/defa
 [server]
 host = "0.0.0.0"
 port = 8081
-# If true, will insert and embedding all for data.path/*.
-rebuild = false

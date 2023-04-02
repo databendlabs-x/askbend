@@ -30,6 +30,17 @@ async fn main() -> Result<()> {
 
     let conf = Config::load()?;
 
+    if conf.server.rebuild {
+        rebuild_embedding(&conf).await?;
+    } else {
+        start_api_server(&conf).await?;
+    }
+
+    Ok(())
+}
+
+/// Rebuild all embeddings.
+async fn rebuild_embedding(conf: &Config) -> Result<()> {
     info!("Step-1: begin parser all markdown files");
     let file_opt = FileOperator::create(&conf.data.path);
     let files = file_opt.list()?;
@@ -46,26 +57,24 @@ async fn main() -> Result<()> {
         markdowns.all_tokens()
     );
 
-    let dal = DatabendDriver::connect(&conf)?;
+    let dal = DatabendDriver::connect(conf)?;
 
-    if conf.server.rebuild {
-        info!("Step-2: begin insert to table");
-        dal.insert(&markdowns).await?;
-        info!("Step-2: finish insert to table");
+    info!("Step-2: begin insert to table");
+    dal.insert(&markdowns).await?;
+    info!("Step-2: finish insert to table");
 
-        info!("Step-3: begin generate embedding, may take some minutes");
-        dal.embedding().await?;
-        info!("Step-3: finish generate embedding");
-    } else {
-        info!("Step-2(Insert) and Step-3(Embedding) skipped, rebuild=false");
-    }
+    info!("Step-3: begin generate embedding, may take some minutes");
+    dal.embedding().await?;
+    info!("Step-3: finish generate embedding");
 
-    info!(
-        "Step-4: start api server {}:{}",
-        conf.server.host, conf.server.port
-    );
+    Ok(())
+}
+
+/// Start the api server.
+async fn start_api_server(conf: &Config) -> Result<()> {
+    info!("Start api server {}:{}", conf.server.host, conf.server.port);
+    let dal = DatabendDriver::connect(conf)?;
     let handler = APIHandler::create(&conf.server, dal.clone());
     handler.start().await?;
-
     Ok(())
 }
