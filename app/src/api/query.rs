@@ -26,7 +26,7 @@ pub struct Query {
 
 #[derive(serde::Serialize)]
 struct Response {
-    result: Vec<String>,
+    result: String,
 }
 
 /// curl -X POST -H "Content-Type: application/json" -d '{"query": "whats the fast way to load data to databend"}' http://localhost:8081/query
@@ -37,7 +37,15 @@ pub async fn query_handler(
     let result = db.query(&query.query).await;
     match result {
         Ok(result) => {
-            let response = Response { result };
+            let response = if !result.is_empty() {
+                Response {
+                    result: result[0].to_string(),
+                }
+            } else {
+                Response {
+                    result: "Sorry, I dont know how to help with that.".to_string(),
+                }
+            };
             HttpResponse::Ok().json(response)
         }
         Err(e) => HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).json(format!("{:?}", e)),
