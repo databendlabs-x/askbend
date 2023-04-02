@@ -22,6 +22,7 @@ use askbend::Parse;
 use env_logger::Builder;
 use env_logger::Env;
 use log::info;
+use tokio::time::Instant;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -29,9 +30,15 @@ async fn main() -> Result<()> {
     Builder::from_env(env).format_target(false).init();
 
     let conf = Config::load()?;
+    info!(
+        "database:{}, table:{}",
+        conf.database.database, conf.database.table
+    );
 
     if conf.server.rebuild {
+        let now = Instant::now();
         rebuild_embedding(&conf).await?;
+        info!("Rebuild done, cost:{}", now.elapsed().as_secs());
     } else {
         start_api_server(&conf).await?;
     }
