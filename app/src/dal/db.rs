@@ -29,6 +29,7 @@ pub struct DatabendDriver {
     pub min_content_length: usize,
     pub max_content_length: usize,
     pub top: usize,
+    pub prompt_template: String,
     pub conn: DatabendConnection,
 }
 
@@ -41,6 +42,7 @@ impl DatabendDriver {
             min_content_length: conf.query.min_content_length,
             max_content_length: conf.query.max_content_length,
             top: conf.query.top,
+            prompt_template: conf.query.prompt.to_string(),
             conn,
         })
     }
@@ -121,19 +123,9 @@ impl DatabendDriver {
         if !similar_sections.is_empty() {
             info!("query completion start");
             let sections_text = similar_sections.to_vec().join(" ");
-            let prompt = format!(
-                r#"You are an enthusiastic Databend representative who is passionate about helping people! Using the provided sections from the Databend documentation. If the answer is not explicitly available in the documentation or you are unsure, respond with "Sorry, I dont know how to help with that." Ensure that the SQL syntax remains unmodified.
-                
-                Documentation sections:
-                {}
-                
-                Question:
-                {}
-                
-                Answer in markdown (including related code snippets if available):
-                "#,
-                sections_text, query
-            );
+            let prompt = self.prompt_template.clone();
+            let prompt = prompt.replace("{{context}}", &sections_text);
+            let prompt = prompt.replace("{{query}}", query);
             let prompt_sql = format!(
                 "SELECT ai_text_completion('{}') as q",
                 escape_sql_string(&prompt)
