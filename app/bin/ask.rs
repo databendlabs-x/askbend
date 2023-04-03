@@ -19,6 +19,7 @@ use askbend::DatabendDriver;
 use askbend::FileOperator;
 use askbend::Markdown;
 use askbend::Parse;
+use askbend::RustCode;
 use env_logger::Builder;
 use env_logger::Env;
 use log::info;
@@ -51,23 +52,38 @@ async fn rebuild_embedding(conf: &Config) -> Result<()> {
     info!("Step-1: begin parser all markdown files");
     let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext);
     let files = file_opt.list()?;
-    let markdowns = Markdown::parse_multiple(
-        &files
-            .iter()
-            .map(|v| v.full_path.clone())
-            .collect::<Vec<String>>(),
-    )?;
+
+    let snippet_files = match conf.data.file_ext.as_str() {
+        "md" => Markdown::parse_multiple(
+            &files
+                .iter()
+                .map(|v| v.full_path.clone())
+                .collect::<Vec<String>>(),
+        ),
+
+        "rs" => RustCode::parse_multiple(
+            &files
+                .iter()
+                .map(|v| v.full_path.clone())
+                .collect::<Vec<String>>(),
+        ),
+        _ => Err(anyhow::Error::msg(format!(
+            "Only support file ext: md or rs, got:{}",
+            conf.data.file_ext
+        ))),
+    }?;
+
     info!(
         "Step-1: finish parser all markdown files:{}, sections:{}, tokens:{}",
         files.len(),
-        markdowns.all_sections(),
-        markdowns.all_tokens()
+        snippet_files.all_snippets(),
+        snippet_files.all_tokens()
     );
 
     let dal = DatabendDriver::connect(conf)?;
 
     info!("Step-2: begin insert to table");
-    dal.insert(&markdowns).await?;
+    dal.insert(&snippet_files).await?;
     info!("Step-2: finish insert to table");
 
     info!("Step-3: begin generate embedding, may take some minutes");

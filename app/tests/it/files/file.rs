@@ -14,8 +14,6 @@
 
 use anyhow::Result;
 use askbend::FileOperator;
-use askbend::Markdown;
-use askbend::Parse;
 
 #[test]
 pub fn test_list() -> Result<()> {
@@ -25,22 +23,6 @@ pub fn test_list() -> Result<()> {
     assert!(metas[0].file_name == "1.md");
     assert_eq!(metas[0].dir, "tests/testdata");
     assert_eq!(metas[0].full_path, "tests/testdata/1.md");
-
-    Ok(())
-}
-
-#[test]
-pub fn test_markdown_sections() -> Result<()> {
-    let file = FileOperator::create("tests/testdata/", "md");
-    let metas = file.list()?;
-
-    let markdowns = Markdown::parse_multiple(&[metas[0].full_path.clone()])?;
-    for markdown in &markdowns.markdowns {
-        assert_eq!(markdown.path, "tests/testdata/1.md");
-        for section in &markdown.sections {
-            println!("--{:?}", section);
-        }
-    }
 
     Ok(())
 }

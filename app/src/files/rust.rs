@@ -19,32 +19,23 @@ use quote::quote;
 use syn::File;
 
 use crate::Parse;
+use crate::SnippetFile;
+use crate::SnippetFiles;
 
-pub struct RustCode {
-    pub path: String,
-    pub snippets: Vec<String>,
-}
-
-pub struct RustCodes {
-    pub rust_codes: Vec<RustCode>,
-}
+pub struct RustCode;
 
 impl Parse for RustCode {
-    type Container = RustCodes;
-
-    fn parse(path: &str) -> Result<Self>
-    where Self: Sized {
+    fn parse(path: &str) -> Result<SnippetFile> {
         let source_code = fs::read_to_string(path)?;
         let ast = parse_rust_code(&source_code)?;
         let snippets = extract_code_snippets(&ast);
-        Ok(RustCode {
-            path: path.to_string(),
-            snippets,
+        Ok(SnippetFile {
+            file_path: path.to_string(),
+            code_snippets: snippets,
         })
     }
 
-    fn parse_multiple(paths: &[String]) -> Result<Self::Container>
-    where Self: Sized {
+    fn parse_multiple(paths: &[String]) -> Result<SnippetFiles> {
         let mut rust_codes = Vec::new();
 
         for path in paths {
@@ -52,7 +43,9 @@ impl Parse for RustCode {
             rust_codes.push(rust_code);
         }
 
-        Ok(RustCodes { rust_codes })
+        Ok(SnippetFiles {
+            snippet_files: rust_codes,
+        })
     }
 }
 

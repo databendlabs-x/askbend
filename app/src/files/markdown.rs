@@ -22,45 +22,13 @@ use comrak::Arena;
 use comrak::ComrakOptions;
 
 use crate::Parse;
+use crate::SnippetFile;
+use crate::SnippetFiles;
 
-pub struct Markdown {
-    pub path: String,
-    pub sections: Vec<String>,
-}
-
-pub struct Markdowns {
-    pub markdowns: Vec<Markdown>,
-}
-
-impl Markdowns {
-    pub fn all_sections(&self) -> usize {
-        self.markdowns
-            .iter()
-            .map(|v| v.sections.len())
-            .collect::<Vec<usize>>()
-            .iter()
-            .sum()
-    }
-
-    pub fn all_tokens(&self) -> usize {
-        self.markdowns
-            .iter()
-            .map(|v| {
-                v.sections
-                    .iter()
-                    .map(|v| v.split_whitespace().count())
-                    .sum()
-            })
-            .collect::<Vec<usize>>()
-            .iter()
-            .sum()
-    }
-}
+pub struct Markdown;
 
 impl Parse for Markdown {
-    type Container = Markdowns;
-
-    fn parse(path: &str) -> Result<Self>
+    fn parse(path: &str) -> Result<SnippetFile>
     where Self: Sized {
         let min_section_len = 1024;
 
@@ -110,21 +78,21 @@ impl Parse for Markdown {
             combined_sections.push(prev_section);
         }
 
-        Ok(Markdown {
-            path: path.to_string(),
-            sections: combined_sections,
+        Ok(SnippetFile {
+            file_path: path.to_string(),
+            code_snippets: combined_sections,
         })
     }
 
-    fn parse_multiple(paths: &[String]) -> Result<Self::Container>
+    fn parse_multiple(paths: &[String]) -> Result<SnippetFiles>
     where Self: Sized {
-        let mut markdowns = Vec::new();
+        let mut snippet_files = Vec::new();
 
         for path in paths {
-            let markdown = Self::parse(path)?;
-            markdowns.push(markdown);
+            let snippet_file = Self::parse(path)?;
+            snippet_files.push(snippet_file);
         }
 
-        Ok(Markdowns { markdowns })
+        Ok(SnippetFiles { snippet_files })
     }
 }
