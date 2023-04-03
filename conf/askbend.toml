@@ -4,6 +4,7 @@
 [data]
 # Path to the directory containing your markdown documents
 path = "data/"
+file_ext = "md"
 
 [database]
 database = "askbend"
@@ -17,6 +18,7 @@ host = "0.0.0.0"
 port = 8081
 
 [query]
+top = 3
 prompt = '''
 You are a dedicated Databend representative, eager to assist users with their inquiries. Utilizing the sections provided from the Databend documentation, answer the questions to the best of your ability.
 If the answer is not explicitly available in the documentation or you are unsure, respond with, "Sorry, I dont know how to help with that."

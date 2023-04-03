@@ -49,12 +49,16 @@ impl Default for LogConfig {
 pub struct DataConfig {
     #[clap(long = "data-path", default_value = "data")]
     pub path: String,
+
+    #[clap(long = "file-ext", default_value = "md")]
+    pub file_ext: String,
 }
 
 impl Default for DataConfig {
     fn default() -> Self {
         DataConfig {
             path: "data".to_string(),
+            file_ext: "md".to_string(),
         }
     }
 }

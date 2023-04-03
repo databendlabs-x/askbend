@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-mod file;
-mod markdown;
-mod parse;
-mod rust;
+use anyhow::Result;
+use askbend::FileOperator;
+use askbend::Parse;
+use askbend::RustCode;
 
-pub use file::FileMeta;
-pub use file::FileOperator;
-pub use parse::Parse;
-pub use rust::RustCode;
-pub use rust::RustCodes;
+#[test]
+pub fn test_rust_file() -> Result<()> {
+    let file = FileOperator::create("tests/testdata/", "rs");
+    let metas = file.list()?;
 
-pub use self::markdown::Markdown;
-pub use self::markdown::Markdowns;
+    let rusts = RustCode::parse_multiple(&[metas[0].full_path.clone()])?;
+    for code in &rusts.rust_codes {
+        assert_eq!(code.path, "tests/testdata/rust.rs");
+        for snippet in &code.snippets {
+            println!("--{:?}", snippet);
+        }
+    }
+
+    Ok(())
+}
