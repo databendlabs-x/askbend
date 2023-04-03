@@ -49,7 +49,8 @@ async fn main() -> Result<()> {
 
 /// Rebuild all embeddings.
 async fn rebuild_embedding(conf: &Config) -> Result<()> {
-    info!("Step-1: begin parser all markdown files");
+    let ext = conf.data.file_ext.clone();
+    info!("Step-1: begin parser all {} files", ext);
     let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext);
     let files = file_opt.list()?;
 
@@ -74,7 +75,8 @@ async fn rebuild_embedding(conf: &Config) -> Result<()> {
     }?;
 
     info!(
-        "Step-1: finish parser all markdown files:{}, sections:{}, tokens:{}",
+        "Step-1: finish parser all {} files:{}, sections:{}, tokens:{}",
+        ext,
         files.len(),
         snippet_files.all_snippets(),
         snippet_files.all_tokens()
