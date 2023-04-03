@@ -19,7 +19,7 @@ use askbend::Parse;
 
 #[test]
 pub fn test_list() -> Result<()> {
-    let operator = FileOperator::create("tests/testdata/");
+    let operator = FileOperator::create("tests/testdata/", "md");
     let metas = operator.list()?;
     assert!(metas.len() == 2);
     assert!(metas[0].file_name == "1.md");
@@ -31,7 +31,7 @@ pub fn test_list() -> Result<()> {
 
 #[test]
 pub fn test_markdown_sections() -> Result<()> {
-    let file = FileOperator::create("tests/testdata/");
+    let file = FileOperator::create("tests/testdata/", "md");
     let metas = file.list()?;
 
     let markdowns = Markdown::parse_multiple(&[metas[0].full_path.clone()])?;

@@ -28,12 +28,14 @@ pub struct FileMeta {
 
 pub struct FileOperator {
     data_path: String,
+    file_ext: String,
 }
 
 impl FileOperator {
-    pub fn create(data_path: &str) -> Self {
+    pub fn create(data_path: &str, file_ext: &str) -> Self {
         FileOperator {
             data_path: data_path.to_string(),
+            file_ext: file_ext.to_string(),
         }
     }
 
@@ -48,7 +50,11 @@ impl FileOperator {
             let file_name = entry.file_name().to_string_lossy().to_string();
             let metadata = fs::metadata(path)?;
 
-            if !metadata.is_dir() && path.extension().map_or(false, |ext| ext == "md") {
+            if !metadata.is_dir()
+                && path
+                    .extension()
+                    .map_or(false, |ext| ext.eq(self.file_ext.clone().as_str()))
+            {
                 let parent = path.parent().map(|p| p.to_string_lossy().into_owned());
                 let full_path = path.to_string_lossy().to_string();
                 let modified = metadata.modified()?;

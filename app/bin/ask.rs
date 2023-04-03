@@ -49,7 +49,7 @@ async fn main() -> Result<()> {
 /// Rebuild all embeddings.
 async fn rebuild_embedding(conf: &Config) -> Result<()> {
     info!("Step-1: begin parser all markdown files");
-    let file_opt = FileOperator::create(&conf.data.path);
+    let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext);
     let files = file_opt.list()?;
     let markdowns = Markdown::parse_multiple(
         &files
