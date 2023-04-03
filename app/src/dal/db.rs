@@ -78,7 +78,7 @@ impl DatabendDriver {
     /// update the table embedding
     pub async fn embedding(&self) -> Result<()> {
         let sql = format!(
-            "UPDATE {}.{} SET embedding = ai_embedding_vector(left(content,{}))) WHERE length(embedding)=0",
+            "UPDATE {}.{} SET embedding = ai_embedding_vector(left(content,{})) WHERE length(embedding)=0",
             self.database, self.table, self.max_content_length,
         );
 
