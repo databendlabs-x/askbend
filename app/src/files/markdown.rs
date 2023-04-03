@@ -16,6 +16,7 @@ use std::fs;
 
 use anyhow::Result;
 use comrak::format_commonmark;
+use comrak::nodes::AstNode;
 use comrak::nodes::NodeValue;
 use comrak::parse_document;
 use comrak::Arena;
@@ -69,26 +70,43 @@ impl Parse for Markdown {
         let root = parse_document(&arena, &content, &ComrakOptions::default());
 
         let mut sections = Vec::new();
-        let mut current_section = String::new();
+        let mut current_section = (String::new(),);
 
-        for node in root.children() {
-            match node.data.borrow().value {
-                NodeValue::Heading(_) => {
-                    if !current_section.is_empty() {
-                        sections.push(current_section);
-                        current_section = String::new();
-                    }
-                }
-                _ => {
-                    let mut section_text = vec![];
-                    format_commonmark(node, &ComrakOptions::default(), &mut section_text).unwrap();
-                    current_section.push_str(std::str::from_utf8(&section_text).unwrap());
-                }
+        fn iter_nodes<'a, F>(node: &'a AstNode<'a>, f: &mut F)
+        where F: FnMut(&'a AstNode<'a>) {
+            f(node);
+            for c in node.children() {
+                iter_nodes(c, f);
             }
         }
 
-        if !current_section.is_empty() {
-            sections.push(current_section);
+        iter_nodes(root, &mut |node| match &node.data.borrow().value {
+            NodeValue::Heading(_) => {
+                if !current_section.0.is_empty() {
+                    sections.push(std::mem::take(&mut current_section.0));
+                }
+            }
+            NodeValue::Link(v) => {
+                current_section.0.push_str(&v.title);
+            }
+            NodeValue::CodeBlock(v) => {
+                current_section.0.push_str("examples: ");
+                current_section.0.push_str("```");
+                current_section.0.push_str(&v.literal);
+                current_section.0.push_str("```");
+            }
+            NodeValue::Image(_) | NodeValue::HtmlInline(_) => {}
+            _ => {
+                let mut section_text = vec![];
+                format_commonmark(node, &ComrakOptions::default(), &mut section_text).unwrap();
+                current_section
+                    .0
+                    .push_str(std::str::from_utf8(&section_text).unwrap());
+            }
+        });
+
+        if !current_section.0.is_empty() {
+            sections.push(current_section.0);
         }
 
         // Combine sections with a length less than the minimum length with the previous section
