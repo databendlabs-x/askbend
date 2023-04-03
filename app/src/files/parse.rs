@@ -14,12 +14,41 @@
 
 use anyhow::Result;
 
+pub struct SnippetFile {
+    pub file_path: String,
+    pub code_snippets: Vec<String>,
+}
+
+pub struct SnippetFiles {
+    pub snippet_files: Vec<SnippetFile>,
+}
+
+impl SnippetFiles {
+    pub fn all_snippets(&self) -> usize {
+        self.snippet_files
+            .iter()
+            .map(|v| v.code_snippets.len())
+            .collect::<Vec<usize>>()
+            .iter()
+            .sum()
+    }
+
+    pub fn all_tokens(&self) -> usize {
+        self.snippet_files
+            .iter()
+            .map(|v| {
+                v.code_snippets
+                    .iter()
+                    .map(|v| v.split_whitespace().count())
+                    .sum()
+            })
+            .collect::<Vec<usize>>()
+            .iter()
+            .sum()
+    }
+}
+
 pub trait Parse {
-    type Container;
-
-    fn parse(path: &str) -> Result<Self>
-    where Self: Sized;
-
-    fn parse_multiple(paths: &[String]) -> Result<Self::Container>
-    where Self: Sized;
+    fn parse(path: &str) -> Result<SnippetFile>;
+    fn parse_multiple(paths: &[String]) -> Result<SnippetFiles>;
 }

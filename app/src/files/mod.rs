@@ -20,8 +20,8 @@ mod rust;
 pub use file::FileMeta;
 pub use file::FileOperator;
 pub use parse::Parse;
+pub use parse::SnippetFile;
+pub use parse::SnippetFiles;
 pub use rust::RustCode;
-pub use rust::RustCodes;
 
 pub use self::markdown::Markdown;
-pub use self::markdown::Markdowns;

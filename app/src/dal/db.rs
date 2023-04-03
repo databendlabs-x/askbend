@@ -20,7 +20,7 @@ use tokio_stream::StreamExt;
 
 use crate::base::escape_sql_string;
 use crate::Config;
-use crate::Markdowns;
+use crate::SnippetFiles;
 
 #[derive(Clone)]
 pub struct DatabendDriver {
@@ -48,19 +48,19 @@ impl DatabendDriver {
     }
 
     /// Insert all the values to databend cloud.
-    pub async fn insert(&self, values: &Markdowns) -> Result<()> {
+    pub async fn insert(&self, values: &SnippetFiles) -> Result<()> {
         let sql = format!(
             "INSERT INTO {}.{} (path, content) VALUES ",
             self.database, self.table
         );
 
         let mut val_vec = vec![];
-        for markdown in &values.markdowns {
-            for section in &markdown.sections {
+        for snippet_file in &values.snippet_files {
+            for snippet in &snippet_file.code_snippets {
                 val_vec.push(format!(
                     "('{}', '{}')",
-                    markdown.path,
-                    escape_sql_string(section)
+                    snippet_file.file_path,
+                    escape_sql_string(snippet)
                 ));
             }
         }
