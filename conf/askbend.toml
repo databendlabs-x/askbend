@@ -4,6 +4,8 @@
 [data]
 # Path to the directory containing your markdown documents
 path = "data/"
+
+# md|rs
 file_ext = "md"
 
 [database]
