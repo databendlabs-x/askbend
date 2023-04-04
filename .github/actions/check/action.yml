@@ -7,9 +7,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Typos
-      uses: crate-ci/typos@master
-
     - name: Format
       shell: bash
       run: |
