@@ -67,9 +67,7 @@ impl DatabendDriver {
         let values = val_vec.join(",").to_string();
 
         let final_sql = format!("{} {}", sql, values);
-        let res = self.conn.exec(&final_sql).await;
-
-        res
+        self.conn.exec(&final_sql).await
     }
 
     /// Build all the embedding which is empty.
@@ -82,9 +80,7 @@ impl DatabendDriver {
             self.database, self.table, self.max_content_length,
         );
 
-        let res = self.conn.exec(&sql).await;
-
-        res
+        self.conn.exec(&sql).await
     }
 
     /// Get a similarly content.

@@ -28,8 +28,7 @@ use crate::SnippetFiles;
 pub struct Markdown;
 
 impl Parse for Markdown {
-    fn parse(path: &str) -> Result<SnippetFile>
-    where Self: Sized {
+    fn parse(path: &str) -> Result<SnippetFile> {
         let min_section_len = 1024;
 
         let content = fs::read_to_string(path)?;
@@ -84,8 +83,7 @@ impl Parse for Markdown {
         })
     }
 
-    fn parse_multiple(paths: &[String]) -> Result<SnippetFiles>
-    where Self: Sized {
+    fn parse_multiple(paths: &[String]) -> Result<SnippetFiles> {
         let mut snippet_files = Vec::new();
 
         for path in paths {
