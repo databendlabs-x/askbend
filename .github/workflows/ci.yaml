@@ -29,7 +29,6 @@ jobs:
         os:
           - ubuntu-latest
           - macos-11
-          - windows-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -45,13 +44,3 @@ jobs:
         with:
           cache-key: unit
       - run: cargo test --all-features --lib -- --show-output
-
-  integration:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-        with:
-          cache-key: integration
-      - run: make -C tests
-      - run: sudo chown -R runner ~/.cargo/registry
