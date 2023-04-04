@@ -9,7 +9,7 @@ const ProductName: FC = (): ReactElement=> {
         <span>Ask</span><span className={styles.bend}>Bend</span>
       </div>
       <span className={styles.sponser}>
-        Power by <a className={styles.link} target="_blank" href="https://www.databend.com" rel="noreferrer">databend Cloud</a>
+        Power by <a className={styles.link} target="_blank" href="https://www.databend.com" rel="noreferrer">Databend Cloud</a>
       </span>
     </div>
    
