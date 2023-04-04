@@ -122,8 +122,16 @@ impl DatabendDriver {
         // Perform text completion if similar sections are found.
         if !similar_sections.is_empty() {
             info!("query completion start");
-            let sections_text = similar_sections.to_vec().join(" ");
+            let mut sections_text = similar_sections.to_vec().join(" ");
+
             let prompt = self.prompt_template.clone();
+
+            // Keep the section is no larger.
+            {
+                let template_len = prompt.len();
+                sections_text.truncate(8192 - template_len);
+            }
+
             let prompt = prompt.replace("{{context}}", &sections_text);
             let prompt = prompt.replace("{{query}}", query);
             let prompt_sql = format!(
