@@ -12,23 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use anyhow::Result;
-use askbend::FileOperator;
-use askbend::Parse;
-use askbend::RustCode;
+use askbend::remove_markdown_links;
 
 #[test]
-pub fn test_rust_files() -> Result<()> {
-    let file = FileOperator::create("tests/testdata/", "rs", &[]);
-    let metas = file.list()?;
-
-    let rusts = RustCode::parse_multiple(&[metas[0].full_path.clone()])?;
-    for code in &rusts.snippet_files {
-        assert_eq!(code.file_path, "tests/testdata/rust.rs");
-        for snippet in &code.code_snippets {
-            println!("--{:?}", snippet);
-        }
-    }
-
-    Ok(())
+fn test_remove_markdown_links() {
+    let markdown_content = "This is an [inline link](https://www.example.com), an ![image](https://www.example.com/image.png), and a [reference link][1].\n\n[1]: https://www.example.org";
+    let expected_output = "This is an inline link, an !image, and a [reference link][1].\n\n[1]: https://www.example.org";
+    let result = remove_markdown_links(markdown_content);
+    assert_eq!(result, expected_output);
 }
