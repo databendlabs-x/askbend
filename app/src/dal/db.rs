@@ -132,7 +132,7 @@ impl DatabendDriver {
             let prompt = prompt.replace("{{query}}", query);
             let prompt_sql = format!(
                 "SELECT ai_text_completion('{}') as q",
-                escape_sql_string(&prompt)
+                remove_markdown_links(&escape_sql_string(&prompt))
             );
             info!("prompt sql:{}", prompt_sql);
 
