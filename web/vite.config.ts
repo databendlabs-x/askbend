@@ -19,7 +19,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/query': {
-        target: 'http://ask.databend.rs:8081',
+        target: 'https://ask.databend.rs',
         changeOrigin: true,
       }
     }
