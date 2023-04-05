@@ -18,7 +18,7 @@ const Result: FC = (): ReactElement=> {
       {
         showErrorTip && <ErrorTip />
       }
-      <div className={styles.resultArea} style={{paddingTop: isSwitch ? '218px':'unset'}}>
+      <div className={styles.resultArea} style={{paddingTop: isSwitch ? '340px':'unset'}}>
         {
           isFeatching  && <WaitCard />
         }

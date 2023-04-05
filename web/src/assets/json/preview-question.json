@@ -1,5 +1,7 @@
 [
-  "What is the fast way to load data to Databend ?",
-  "What is Stage ?",
-  "How to Create a Table"
+  "What is Databend?",
+  "How do I create user with privileges in Databend?",
+  "How do I create table in Databend?",
+  "How do I insert data into a Databend table?",
+  "How do I load CSV files to table from external stage in Databend?"
 ]

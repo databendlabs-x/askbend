@@ -6,15 +6,16 @@ import Typed from 'react-typed';
 import { useSafeState, useInterval, useUnmount, useMount } from 'ahooks';
 import { useGetResultsState } from '@/state/hooks/useGetResultsState';
 const WaitCard: FC = (): ReactElement=> {
-  const { isFeatching } = useGetResultsState();
-  const [typeSpeed, setTypeSpeed] = useSafeState(100);
+  const { isFeatching, preQuestion, inputQuestion } = useGetResultsState();
+  const [typeSpeed, setTypeSpeed] = useSafeState(30);
   const [interval, setInterval] = useSafeState<number | undefined>(undefined);
+  const [question, setQuestion] = useSafeState('');
   useInterval(()=> {
-    const randomNumber = Math.floor(Math.random() * 71) + 200;
+    const randomNumber = Math.floor(Math.random() * 10) + 5;
     setTypeSpeed(randomNumber);
   }, interval);
   useMount(()=> {
-    setInterval(3000);
+    setInterval(2000);
   });
   useUnmount(()=> {
     setInterval(undefined);
@@ -25,13 +26,21 @@ const WaitCard: FC = (): ReactElement=> {
       setInterval(undefined);
     }
   }, [isFeatching]);
+  useEffect(()=> {
+    preQuestion && setQuestion(preQuestion);
+  }, [preQuestion]);
+  useEffect(()=> {
+    inputQuestion && setQuestion(inputQuestion);
+  }, [inputQuestion]);
   return (
     <Card className={styles.card} padding={[12, 12]}>
       <span>💡 </span>
       <Typed 
         className={styles.typed}
         loop={false}
-        strings={['<span class="type-line-one">Please be patient and wait ... </span></br><span class="type-line-two">We are organizing the answers for you, which may take some time.</span>']}
+        strings={[`
+          <span class="type-line-one">We apologize for the wait and appreciate your patience...</span></br><span  class="type-line-zero"><span class="type-line-question">You seem curious about: ${question}</span></span></br><span class="type-line-two">AI is in the process of organizing the answers for you, which may take some time.</span>
+        `]}
         typeSpeed={typeSpeed}
       ></Typed>
     </Card>

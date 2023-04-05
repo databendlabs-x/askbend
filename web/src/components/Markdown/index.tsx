@@ -30,6 +30,18 @@ const AskDatabendMarkdown = (props: tProps) => {
               {children}
             </code>
           );
+        },
+        a: (props: {href: string, children: string[]} | any) => {
+          const desc = props?.children[0];
+          return (
+            <a 
+              target="_blank" 
+              title={desc} 
+              rel="noopener noreferrer" 
+              href={props?.href}>
+              {props?.children[0]}
+            </a>
+          );
         }
       }}
     >

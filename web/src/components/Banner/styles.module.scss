@@ -12,12 +12,11 @@
     background-color: var(--color-bg-0);
   }
   &.secondBanner {
-    position: sticky;
+    position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     padding: 0;
-    height: 88px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,6 +29,7 @@
       align-items: center;
       justify-content: center;
       flex-direction: row;
+      border-radius: 0;
       gap: 24px;
     }
   }
