@@ -18,3 +18,14 @@ export function selfUseHotkeys(key:string, callback: ()=> void) {
     callback();
   });
 }
+// scroll to the top
+export function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+// fortmat number
+export function numberFormat(num: number): string | number {
+  return num < 1000 ? num : (num / 1000).toFixed(1) + 'K';
+}

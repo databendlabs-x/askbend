@@ -1,10 +1,14 @@
 // Copyright 2023 Datafuse Labs.
 import React,{ FC, ReactElement } from 'react';
 import styles from './styles.module.less';
-import PreviewJson from '../../assets/json/preview-question.json';
-import Card from '../Card';
+import PreviewJson from '@/assets/json/preview-question.json';
+import Card from 'components/Card';
+import useResultsDispatch from '@/state/redux/dispatch/results';
 const Introduction: FC = (): ReactElement=> {
-  console.log(PreviewJson);
+  const { dispatchSetPreQuestion } = useResultsDispatch();
+  function selectedPreQuestion(content: string) {
+    dispatchSetPreQuestion(content);
+  }
   return (
     <div className={styles.introduction}>
       <p>
@@ -15,13 +19,15 @@ const Introduction: FC = (): ReactElement=> {
         {
           PreviewJson?.map((prev, index) => {
             return (
-              <Card padding={[10, 12]} key={index}>
-                {prev}
+              <Card 
+                onClick={()=> selectedPreQuestion(prev)}
+                padding={[10, 12]}
+                key={index}>
+                🤔️ {prev}
               </Card>
             );
           })
         }
-       
       </div>
     </div>
   );

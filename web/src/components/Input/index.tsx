@@ -2,19 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
-import DatabendSvg from '../../assets/svg/databend';
-import SendSvg from '../../assets/svg/send';
-import axios from 'axios';
-import { useSafeState } from 'ahooks';
-import useResultsDispatch from '../../state/redux/dispatch/results';
-import WhiteLoading from '../Loading';
-import { KEY_CODE } from '../../assets/constant';
-import { useGetResultsState } from '../../state/hooks/useGetResultsState';
+import DatabendSvg from '@/assets/svg/databend';
+import SendSvg from '@/assets/svg/send';
+import { useSafeState, useUpdateEffect } from 'ahooks';
+import useResultsDispatch from '@/state/redux/dispatch/results';
+import WhiteLoading from 'components/Loading';
+import { KEY_CODE } from '@/assets/constant';
+import { useGetResultsState } from '@/state/hooks/useGetResultsState';
+import useGetScrollInfo from '@/hooks/useGetScrollInfo';
+import clsx from 'clsx';
+import { scrollToTop } from '@/utils/tools';
+import { getAnswers } from '@/api';
 const QuestionInput: FC = (): ReactElement=> {
   const INPUT_ID = 'question-input';
-  const { dispatchUpdateResultList, dispatchIsFetching } =  useResultsDispatch();
+  const { isSwitch } =  useGetScrollInfo();
+  const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip } =  useResultsDispatch();
   const [queryText, setQueryText] = useSafeState('');
-  const { isFeatching } = useGetResultsState();
+  const { isFeatching, preQuestion } = useGetResultsState();
   const [isRegenerate, setIsRegenerate] = useState(false);
   useEffect(()=>{
     window.addEventListener('keydown', onKeyDown);
@@ -22,24 +26,34 @@ const QuestionInput: FC = (): ReactElement=> {
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [queryText]);
+  useUpdateEffect(()=> {
+    setQueryText(preQuestion);
+    getResults(false, preQuestion);
+  }, [preQuestion]);
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement> | any){
     const code = e.keyCode || e.which;
     if ((e.target as HTMLInputElement)?.id === INPUT_ID && code === KEY_CODE.ENTER) {
       getResults();
     }
   }
-  async function getResults(isRegenerate = false) {
+  async function getResults(isRegenerate = false, preQuestion?: string) {
     dispatchIsFetching(true);
+    dispatchShowErrorTip(false);
     try{
-      const data = await axios.post('/query', {
-        query: queryText
-      });
+      const data = await getAnswers(preQuestion ? preQuestion : queryText);
       if ([200, 201]?.includes(data?.status )) {
         const res = data?.data?.result;
         dispatchUpdateResultList({value: res, isRegenerate});
-        setIsRegenerate(true);
+      } else {
+        dispatchShowErrorTip(true);
       }
-    } finally{
+    }
+    catch (error) {
+      dispatchShowErrorTip(true);
+    }
+    finally{
+      setIsRegenerate(true);
+      scrollToTop();
       dispatchIsFetching(false);
     }
   }
@@ -54,8 +68,9 @@ const QuestionInput: FC = (): ReactElement=> {
       </span>
       <input 
         id={INPUT_ID}
+        value={queryText}
         onChange={(e)=> changeQueryText(e)}
-        placeholder='Ask AI to question?' className={styles.input} type='text'></input>
+        placeholder='Ask AI to question?' className={clsx(styles.input, isSwitch && styles.inputOthview)} type='text'></input>
       <span className={styles.suffix}>
         {
           isFeatching ? (

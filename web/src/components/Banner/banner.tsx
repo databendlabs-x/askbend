@@ -2,16 +2,31 @@
 import React from 'react';
 import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
-import ProductName from '../ProcuctName';
-import QuestionInput from '../Input';
+import ProductName from 'components/ProcuctName';
+import QuestionInput from 'components/Input';
+import clsx from 'clsx';
+import useGetScrollInfo from '@/hooks/useGetScrollInfo';
 const Banner: FC = (): ReactElement=> {
+  const { isSwitch } =  useGetScrollInfo();
   return (
-    <div className={styles.banner}>
-      <div className={styles.content}>
-        <ProductName />
-        <QuestionInput />
-      </div>
-    </div>
+    <>
+      {
+        isSwitch
+          ? <div className={clsx(styles.banner, styles.secondBanner)}>
+            <div className={styles.content}>
+              <ProductName showSponser={false} />
+              <QuestionInput />
+            </div>
+          </div>
+          :  <div className={styles.banner}>
+            <div className={styles.content}>
+              <ProductName />
+              <QuestionInput />
+            </div>
+          </div>
+       
+      }
+    </>
   );
 };
 export default Banner;

@@ -1,9 +1,9 @@
 // Copyright 2023 Datafuse Labs.
 import React, { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
-import TimeSvg from '../../assets/svg/time';
+import TimeSvg from '@/assets/svg/time';
 import ResultCard from './result-card';
-import { timeFormatAgo } from '../../utils/tools';
+import { timeFormatAgo } from '@/utils/tools';
 interface IProps {
   value: string;
   date: string | number | undefined;

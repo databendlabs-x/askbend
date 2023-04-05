@@ -1,9 +1,9 @@
 // Copyright 2023 Datafuse Labs.
 import React, { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
-import Card from '../Card';
+import Card from 'components/Card';
 import clsx from 'clsx';
-import AskDatabendMarkdown from '../Markdown';
+import AskDatabendMarkdown from 'components/Markdown';
 interface IProps{
   isFirst?: boolean;
   value: string;

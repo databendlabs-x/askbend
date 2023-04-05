@@ -4,13 +4,16 @@ import styles from './styles.module.less';
 import SuccessTip from './success-tip';
 import ResultCard from './result-card';
 import ResultHistoryCard from './result-history-card';
-import WaitCard from '../WaitCard';
-import { useGetResultsState } from '../../state/hooks/useGetResultsState';
-import Introduction from '../Introduction';
+import WaitCard from 'components/WaitCard';
+import { useGetResultsState } from '@/state/hooks/useGetResultsState';
+import Introduction from 'components/Introduction';
+import useGetScrollInfo from '@/hooks/useGetScrollInfo';
+import ErrorTip from '../Error';
 const Result: FC = (): ReactElement=> {
-  const { resultsList, isFeatching } =  useGetResultsState();
+  const { resultsList, isFeatching, showErrorTip } =  useGetResultsState();
+  const { isSwitch } =  useGetScrollInfo();
   return (
-    <div>
+    <div className={styles.resultArea} style={{paddingTop: isSwitch ? '218px':'unset'}}>
       {
         isFeatching  && <WaitCard />
       }
@@ -30,6 +33,9 @@ const Result: FC = (): ReactElement=> {
           })
         }
       </div>
+      {
+        showErrorTip && <ErrorTip />
+      }
     </div>
   );
 };
