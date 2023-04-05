@@ -1,0 +1,21 @@
+.introduction {
+  p {
+   margin-bottom: 20px; 
+  }
+  .introTitle {
+    color: var(--color-text-1);
+  }
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: 400;
+  >div{
+    &:hover{
+      border-color: var(--color-primary)!important;
+    }
+  }
+}

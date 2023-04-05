@@ -1,0 +1,18 @@
+.wrap {
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 12px;
+  border-radius: 8px;
+  color: var(--color-text-2);
+  width: 760px;
+  margin: 0 auto;
+  @include media {
+    width: 92%;
+    height: auto;
+    padding: 12px;
+  }
+}

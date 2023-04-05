@@ -1,0 +1,48 @@
+.banner {
+  padding: 20px;
+  .content {
+    height: 302px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    border-radius: 12px;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    background-color: var(--color-bg-0);
+  }
+  &.secondBanner {
+    position: sticky;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 0;
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .content {
+      height: auto;
+      width: 100%;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      gap: 24px;
+    }
+  }
+  @include media {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 12px;
+    .content {
+      border-radius: 0;
+      width: 100%;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      height: 200px;
+    }
+  }
+}
