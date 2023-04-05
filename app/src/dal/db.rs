@@ -19,8 +19,8 @@ use tokio::time::Instant;
 use tokio_stream::StreamExt;
 
 use crate::base::escape_sql_string;
-use crate::Config;
 use crate::SnippetFiles;
+use crate::{remove_markdown_links, Config};
 
 #[derive(Clone)]
 pub struct DatabendDriver {
@@ -60,7 +60,7 @@ impl DatabendDriver {
                 val_vec.push(format!(
                     "('{}', '{}')",
                     snippet_file.file_path,
-                    escape_sql_string(snippet)
+                    remove_markdown_links(&escape_sql_string(snippet))
                 ));
             }
         }

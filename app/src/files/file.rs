@@ -16,7 +16,7 @@ use std::fs;
 use std::time::SystemTime;
 
 use anyhow::Result;
-use walkdir::WalkDir;
+use walkdir::{DirEntry, WalkDir};
 
 #[derive(Clone, Debug)]
 pub struct FileMeta {
@@ -29,13 +29,15 @@ pub struct FileMeta {
 pub struct FileOperator {
     data_path: String,
     file_ext: String,
+    ignore_dirs: Vec<String>,
 }
 
 impl FileOperator {
-    pub fn create(data_path: &str, file_ext: &str) -> Self {
+    pub fn create(data_path: &str, file_ext: &str, ignore_dirs: &[String]) -> Self {
         FileOperator {
             data_path: data_path.to_string(),
             file_ext: file_ext.to_string(),
+            ignore_dirs: ignore_dirs.to_vec(),
         }
     }
 
@@ -43,7 +45,20 @@ impl FileOperator {
     pub fn list(&self) -> Result<Vec<FileMeta>> {
         let mut metas = vec![];
 
-        for entry in WalkDir::new(self.data_path.clone()) {
+        let is_skipped_entry = |entry: &DirEntry| -> bool {
+            if entry.file_type().is_dir() {
+                self.ignore_dirs
+                    .iter()
+                    .any(|ignore_dir| entry.file_name().to_string_lossy().contains(ignore_dir))
+            } else {
+                false
+            }
+        };
+
+        for entry in WalkDir::new(self.data_path.clone())
+            .into_iter()
+            .filter_entry(|e| !is_skipped_entry(e))
+        {
             let entry = entry?;
 
             let path = entry.path();

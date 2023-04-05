@@ -52,6 +52,9 @@ pub struct DataConfig {
 
     #[clap(long = "file-ext", default_value = "md")]
     pub file_ext: String,
+
+    #[clap(long = "ignore-dirs", default_value = "", use_value_delimiter = true)]
+    pub ignore_dirs: Vec<String>,
 }
 
 impl Default for DataConfig {
@@ -59,6 +62,7 @@ impl Default for DataConfig {
         DataConfig {
             path: "data".to_string(),
             file_ext: "md".to_string(),
+            ignore_dirs: vec![],
         }
     }
 }
