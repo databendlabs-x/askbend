@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::env;
+use std::fmt::{Debug, Formatter};
+use std::{env, fmt};
 
 use anyhow::Result;
 use clap::Parser;
@@ -53,7 +54,11 @@ pub struct DataConfig {
     #[clap(long = "file-ext", default_value = "md")]
     pub file_ext: String,
 
-    #[clap(long = "ignore-dirs", default_value = "", use_value_delimiter = true)]
+    #[clap(
+        long = "ignore-dirs",
+        default_value = "rfc",
+        use_value_delimiter = true
+    )]
     pub ignore_dirs: Vec<String>,
 }
 
@@ -62,12 +67,12 @@ impl Default for DataConfig {
         DataConfig {
             path: "data".to_string(),
             file_ext: "md".to_string(),
-            ignore_dirs: vec![],
+            ignore_dirs: vec!["rfc".to_string()],
         }
     }
 }
 
-#[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Parser, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
 pub struct DatabaseConfig {
     #[clap(long = "database", default_value_t)]
@@ -76,6 +81,16 @@ pub struct DatabaseConfig {
     pub table: String,
     #[clap(long = "dsn", default_value_t)]
     pub dsn: String,
+}
+
+impl Debug for DatabaseConfig {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("DatabaseConfig")
+            .field("database", &self.database)
+            .field("table", &self.table)
+            .field("dsn", &"******")
+            .finish()
+    }
 }
 
 impl Default for DatabaseConfig {

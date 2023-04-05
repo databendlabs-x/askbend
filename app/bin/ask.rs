@@ -31,10 +31,7 @@ async fn main() -> Result<()> {
     Builder::from_env(env).format_target(false).init();
 
     let conf = Config::load()?;
-    info!(
-        "database:{}, table:{}",
-        conf.database.database, conf.database.table
-    );
+    info!("config: {:?}", conf);
 
     if conf.server.rebuild {
         let now = Instant::now();
