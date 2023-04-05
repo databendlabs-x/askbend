@@ -88,7 +88,6 @@ impl DatabendDriver {
         let mut similar_sections = vec![];
         let mut similar_distances = vec![];
 
-        info!("query coming: {}", query);
         info!("distance query start");
         let now = Instant::now();
         // Retrieve sections with the highest similarity to the input query.
@@ -136,6 +135,7 @@ impl DatabendDriver {
                 &escape_sql_string(&prompt)
             );
             info!("prompt sql:{}", prompt_sql);
+            info!("query is: {}", query);
 
             type TextCompletionResult = (String,);
             let mut text_completions = vec![];
