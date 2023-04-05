@@ -1,5 +1,8 @@
 .wrap {
   position: relative;
+  @include media {
+    width: 96%;
+  }
 }
 .input {
   outline: unset;
@@ -18,6 +21,11 @@
   }
   &.inputOthview {
     width: 557px;
+  }
+}
+@include media {
+  .input {
+    width: 100%;
   }
 }
 .prefix {

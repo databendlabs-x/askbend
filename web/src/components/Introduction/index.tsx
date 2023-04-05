@@ -1,6 +1,6 @@
 // Copyright 2023 Datafuse Labs.
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import PreviewJson from '@/assets/json/preview-question.json';
 import Card from 'components/Card';
 import useResultsDispatch from '@/state/redux/dispatch/result';

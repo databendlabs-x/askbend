@@ -24,6 +24,14 @@ export default defineConfig({
       }
     }
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        javascriptEnabled: true,
+        additionalData: '@import "@/assets/css/mixin.scss";'
+      }
+    },
+  },
   build: {
     rollupOptions: {
       output:{

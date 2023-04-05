@@ -1,7 +1,7 @@
 // Copyright 2023 Datafuse Labs.
 import { useEffect, useState } from 'react';
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import DatabendSvg from '@/assets/svg/databend';
 import SendSvg from '@/assets/svg/send';
 import { useSafeState, useUpdateEffect } from 'ahooks';
@@ -69,6 +69,7 @@ const QuestionInput: FC = (): ReactElement=> {
       <input 
         id={INPUT_ID}
         value={queryText}
+        autoComplete="off"
         onChange={(e)=> changeQueryText(e)}
         placeholder='Ask AI to question?' className={clsx(styles.input, isSwitch && styles.inputOthview)} type='text'></input>
       <span className={styles.suffix}>

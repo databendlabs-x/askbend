@@ -1,6 +1,6 @@
 // Copyright 2023 Datafuse Labs.
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import SuccessTip from './success-tip';
 import ResultCard from './result-card';
 import ResultHistoryCard from './result-history-card';
@@ -27,17 +27,21 @@ const Result: FC = (): ReactElement=> {
             ? <>{!isFeatching && <SuccessTip />}</>
             : <>{isFeatching===undefined && <Introduction />}</>
         }
-        <div className={styles.list}>
-          {
-            resultsList?.map((res: tResultsItem,index: number)=> {
-              if (index ==0) {
-                return  <ResultCard key={index} isFirst value={res.value}/>;
-              } else {
-                return  <ResultHistoryCard key={index} date={res.date} value={res.value}/>;
-              }
-            })
-          }
-        </div>
+        {
+          resultsList?.length>0 && 
+          <div className={styles.list}>
+            {
+              resultsList?.map((res: tResultsItem,index: number)=> {
+                if (index ==0) {
+                  return  <ResultCard key={index} isFirst value={res.value}/>;
+                } else {
+                  return  <ResultHistoryCard key={index} date={res.date} value={res.value}/>;
+                }
+              })
+            }
+          </div>
+        }
+        
       </div>
     </>
    

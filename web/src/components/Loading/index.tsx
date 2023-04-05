@@ -1,6 +1,6 @@
 // Copyright 2022 Datafuse Labs.
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import clsx from 'clsx';
 interface IProps {
   className?: string;

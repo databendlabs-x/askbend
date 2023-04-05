@@ -33,4 +33,16 @@
       gap: 24px;
     }
   }
+  @include media {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 12px;
+    .content {
+      border-radius: 0;
+      width: 100%;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      height: 200px;
+    }
+  }
 }

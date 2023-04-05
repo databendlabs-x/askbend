@@ -1,6 +1,6 @@
 // Copyright 2023 Datafuse Labs.
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 const ErrorTip: FC = (): ReactElement=> {
   return (
     <div className={styles.wrap}>

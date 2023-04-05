@@ -1,0 +1,5 @@
+@mixin media($phone: 997px){
+  @media screen and (max-width: $phone) {
+    @content;
+  }
+}

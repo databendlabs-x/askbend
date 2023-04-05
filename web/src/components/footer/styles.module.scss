@@ -30,4 +30,16 @@
   a {
     text-decoration: none;
   }
+  @include media {
+    // position: static;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+    span{
+      text-align: center;
+    }
+    span:nth-child(2) {
+      display: none;
+    }
+  }
 }

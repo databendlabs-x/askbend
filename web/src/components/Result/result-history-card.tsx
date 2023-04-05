@@ -1,6 +1,6 @@
 // Copyright 2023 Datafuse Labs.
 import { FC, ReactElement } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import TimeSvg from '@/assets/svg/time';
 import ResultCard from './result-card';
 import { timeFormatAgo } from '@/utils/tools';

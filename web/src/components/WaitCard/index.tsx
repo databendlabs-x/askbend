@@ -1,6 +1,6 @@
 // Copyright 2023 Datafuse Labs.
 import { FC, ReactElement, useEffect } from 'react';
-import styles from './styles.module.less';
+import styles from './styles.module.scss';
 import Card from 'components/Card';
 import Typed from 'react-typed';
 import { useSafeState, useInterval, useUnmount, useMount } from 'ahooks';
