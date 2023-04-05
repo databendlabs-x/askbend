@@ -38,6 +38,12 @@ module.exports = {
     'semi': [
       'error',
       'always'
-    ]
+    ],
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'no-empty-function': 'off',
+    'no-mixed-spaces-and-tabs': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'no-explicit-any': 'off'
   }
 };
