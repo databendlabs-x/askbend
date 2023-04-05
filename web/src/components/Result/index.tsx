@@ -9,6 +9,7 @@ import { useGetResultsState } from '@/state/hooks/useGetResultsState';
 import Introduction from 'components/Introduction';
 import useGetScrollInfo from '@/hooks/useGetScrollInfo';
 import ErrorTip from '../Error';
+import { tResultsItem } from '@/types';
 const Result: FC = (): ReactElement=> {
   const { resultsList, isFeatching, showErrorTip } =  useGetResultsState();
   const { isSwitch } =  useGetScrollInfo();
@@ -24,7 +25,7 @@ const Result: FC = (): ReactElement=> {
       }
       <div className={styles.list}>
         {
-          resultsList?.map((res,index)=> {
+          resultsList?.map((res: tResultsItem,index: number)=> {
             if (index ==0) {
               return  <ResultCard key={index} isFirst value={res.value}/>;
             } else {
