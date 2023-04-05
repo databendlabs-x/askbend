@@ -17,6 +17,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
+    "noImplicitAny": false,
     "paths": {
       "@/*": [
         "./src/*"
