@@ -73,7 +73,8 @@ const QuestionInput: FC = (): ReactElement=> {
         value={queryText}
         autoComplete="off"
         onChange={(e)=> changeQueryText(e)}
-        placeholder='Ask AI a question?' className={clsx(styles.input, isSwitch && styles.inputOthview)} type='text'></input>
+        placeholder='Ask AI a question?' 
+        className={clsx(styles.input, isSwitch && styles.inputOthview, isRegenerate && styles.inputRegenerate)} type='text' />
       <span className={styles.suffix}>
         {
           isFeatching ? (

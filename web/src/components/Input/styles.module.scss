@@ -15,12 +15,15 @@
   border-radius: 6px;
   color: rgba(255,255,255, 1);
   padding-left: 44px;
-  padding-right: 12px;
+  padding-right: 44px;
   &::placeholder{
     color: rgba(255,255,255, 0.7);
   }
   &.inputOthview {
     width: 557px;
+  }
+  &.inputRegenerate {
+    padding-right: 120px;
   }
 }
 @include media {
