@@ -2,13 +2,18 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "checkJs": false,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "strict": false,
     "allowJs": false,
+    "checkJs": false,
     "skipLibCheck": true,
+    "useUnknownInCatchVariables": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -16,8 +21,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "noImplicitAny": false,
+    "types":["vite/client"],
     "paths": {
       "@/*": [
         "./src/*"
@@ -27,6 +31,7 @@
       ]
     }
   },
-  "include": ["./src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "./src"
+  ]
 }
