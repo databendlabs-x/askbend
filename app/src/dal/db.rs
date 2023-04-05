@@ -118,7 +118,8 @@ impl DatabendDriver {
         // Perform text completion if similar sections are found.
         if !similar_sections.is_empty() {
             info!("query completion start");
-            let mut sections_text = similar_sections.to_vec().join(" ");
+            let sections_text = similar_sections.to_vec().join(" ");
+            let mut sections_text = remove_markdown_links(&sections_text);
 
             let prompt = self.prompt_template.clone();
 
@@ -132,7 +133,7 @@ impl DatabendDriver {
             let prompt = prompt.replace("{{query}}", query);
             let prompt_sql = format!(
                 "SELECT ai_text_completion('{}') as q",
-                remove_markdown_links(&escape_sql_string(&prompt))
+                &escape_sql_string(&prompt)
             );
             info!("prompt sql:{}", prompt_sql);
 
