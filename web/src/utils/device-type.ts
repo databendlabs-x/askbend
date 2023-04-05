@@ -19,3 +19,4 @@ export function deviceType(): DeviceType {
     return detaultDeviceType;
   }
 }
+
