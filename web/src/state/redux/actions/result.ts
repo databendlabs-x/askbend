@@ -1,5 +1,5 @@
 import { tResultsItem } from '@/types';
-import { DO_FETCHING, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/result';
+import { DO_FETCHING, SET_INPUT_QUESTION, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/result';
 
 export interface IGetResultsAction {
   type: UPDATE_RESULT;
@@ -16,6 +16,11 @@ export interface ISetPreQuestionAction {
   payload: string;
 }
 
+export interface ISetInputQuestionAction {
+  type: SET_INPUT_QUESTION;
+  payload: string;
+}
+
 export interface IShowErrorTipAction {
   type: SHOW_ERROR_TIP;
   payload: boolean;
@@ -25,3 +30,4 @@ export type ResultsActions =
 | IDoFetchingAction
 | ISetPreQuestionAction
 | IShowErrorTipAction
+| ISetInputQuestionAction

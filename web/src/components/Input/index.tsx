@@ -16,7 +16,7 @@ import { getAnswers } from '@/api';
 const QuestionInput: FC = (): ReactElement=> {
   const INPUT_ID = 'question-input';
   const { isSwitch } =  useGetScrollInfo();
-  const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip } =  useResultsDispatch();
+  const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip, dispatchSetInputQuestion } =  useResultsDispatch();
   const [queryText, setQueryText] = useSafeState('');
   const { isFeatching, preQuestion } = useGetResultsState();
   const [isRegenerate, setIsRegenerate] = useState(false);
@@ -58,8 +58,10 @@ const QuestionInput: FC = (): ReactElement=> {
     }
   }
   function changeQueryText(e: React.ChangeEvent<HTMLInputElement>) {
-    setQueryText(e?.target?.value);
+    const value = e?.target?.value;
+    setQueryText(value);
     setIsRegenerate(false);
+    dispatchSetInputQuestion(value);
   }
   return (
     <span className={styles.wrap}>

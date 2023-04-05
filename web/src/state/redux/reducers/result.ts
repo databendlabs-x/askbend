@@ -1,17 +1,19 @@
 
 import { tResultsItem } from '@/types';
 import { ResultsActions } from '../actions/result';
-import { DO_FETCHING, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/result';
+import { DO_FETCHING, SET_INPUT_QUESTION, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/result';
 export type ResultsState = {
   resultsList: tResultsItem[];
   isFeatching: boolean | undefined;
   preQuestion: string;
+  inputQuestion: string;
   showErrorTip: boolean;
 }
 const initialState: ResultsState = {
   resultsList: [],
   isFeatching: undefined,
   preQuestion: '',
+  inputQuestion: '',
   showErrorTip: false
 };
 const resultsReducer = (state: ResultsState = initialState, action: ResultsActions) => {
@@ -40,6 +42,11 @@ const resultsReducer = (state: ResultsState = initialState, action: ResultsActio
     return {
       ...state,
       preQuestion: action.payload
+    };
+  case SET_INPUT_QUESTION: 
+    return {
+      ...state,
+      inputQuestion: action.payload
     };
   case SHOW_ERROR_TIP: 
     return {
