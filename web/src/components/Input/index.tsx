@@ -5,7 +5,7 @@ import styles from './styles.module.less';
 import DatabendSvg from '@/assets/svg/databend';
 import SendSvg from '@/assets/svg/send';
 import { useSafeState, useUpdateEffect } from 'ahooks';
-import useResultsDispatch from '@/state/redux/dispatch/results';
+import useResultsDispatch from '@/state/redux/dispatch/result';
 import WhiteLoading from 'components/Loading';
 import { KEY_CODE } from '@/assets/constant';
 import { useGetResultsState } from '@/state/hooks/useGetResultsState';

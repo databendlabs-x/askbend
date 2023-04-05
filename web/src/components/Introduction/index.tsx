@@ -3,7 +3,7 @@ import React,{ FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import PreviewJson from '@/assets/json/preview-question.json';
 import Card from 'components/Card';
-import useResultsDispatch from '@/state/redux/dispatch/results';
+import useResultsDispatch from '@/state/redux/dispatch/result';
 const Introduction: FC = (): ReactElement=> {
   const { dispatchSetPreQuestion } = useResultsDispatch();
   function selectedPreQuestion(content: string) {

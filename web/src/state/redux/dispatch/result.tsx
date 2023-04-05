@@ -1,5 +1,5 @@
-import { DO_FETCHING, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/results';
-import { ResultsActions } from '../actions/results';
+import { DO_FETCHING, SET_PRE_QUESTION, SHOW_ERROR_TIP, UPDATE_RESULT } from '../constant/result';
+import { ResultsActions } from '../actions/result';
 import useDatabendDispatch from '@/state/hooks/useDatabendDispatch';
 import { tResultsItem } from '@/types';
 
