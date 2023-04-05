@@ -19,7 +19,7 @@ use askbend::Parse;
 
 #[test]
 pub fn test_markdown_files() -> Result<()> {
-    let file = FileOperator::create("tests/testdata/", "md");
+    let file = FileOperator::create("tests/testdata/", "md", &[]);
     let metas = file.list()?;
 
     let markdowns = Markdown::parse_multiple(&[metas[0].full_path.clone()])?;

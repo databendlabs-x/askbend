@@ -50,8 +50,9 @@ async fn main() -> Result<()> {
 /// Rebuild all embeddings.
 async fn rebuild_embedding(conf: &Config) -> Result<()> {
     let ext = conf.data.file_ext.clone();
+    let ignore_dirs = conf.data.ignore_dirs.clone();
     info!("Step-1: begin parser all {} files", ext);
-    let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext);
+    let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext, &ignore_dirs);
     let files = file_opt.list()?;
 
     let snippet_files = match conf.data.file_ext.as_str() {

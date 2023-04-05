@@ -17,12 +17,23 @@ use askbend::FileOperator;
 
 #[test]
 pub fn test_list() -> Result<()> {
-    let operator = FileOperator::create("tests/testdata/", "md");
+    let operator = FileOperator::create("tests/testdata/", "md", &[]);
     let metas = operator.list()?;
-    assert!(metas.len() == 2);
+    println!("{:?}", metas);
+    assert!(metas.len() == 3);
     assert!(metas[0].file_name == "1.md");
     assert_eq!(metas[0].dir, "tests/testdata");
     assert_eq!(metas[0].full_path, "tests/testdata/1.md");
+
+    Ok(())
+}
+
+#[test]
+pub fn test_list_ignore_dir() -> Result<()> {
+    let operator = FileOperator::create("tests/testdata/", "md", &["ignore_dir".to_string()]);
+    let metas = operator.list()?;
+    println!("{:?}", metas);
+    assert!(metas.len() == 2);
 
     Ok(())
 }

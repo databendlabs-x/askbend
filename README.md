@@ -21,9 +21,9 @@ The project follows this general process:
 1. Read and parse Markdown files from a directory.
 2. Extract the content and store it in the askbend.doc table.
 3. Compute embeddings for the content using Databend Cloud's built-in AI capabilities, including OpenAI's embedding generation, all through SQL.
-4. When a user queries, generate the query embedding using Databend Cloud's SQL-based ai_embedding_vector function.
-5. Perform a vector calculation to find the most relevant doc.content using Databend Cloud's SQL-based cosine_distance function.
-6. Concatenate the retrieved content and use OpenAI's completion capabilities with Databend Cloud's SQL-based ai_text_completion function.
+4. When a user queries, generate the query embedding using Databend Cloud's SQL-based `ai_embedding_vector` function.
+5. Perform a vector calculation to find the most relevant doc.content using Databend Cloud's SQL-based `cosine_distance` function.
+6. Concatenate the retrieved content and use OpenAI's completion capabilities with Databend Cloud's SQL-based `ai_text_completion` function.
 7. Output the completion result in Markdown format.
 
 ## Setup
@@ -72,6 +72,17 @@ dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/defa
 [server]
 host = "0.0.0.0"
 port = 8081
+
+[query]
+top = 3
+prompt = '''
+<your prompt> ... 
+Documentation sections:
+{{context}}
+
+Question:
+{{query}}
+'''
 ```
 
 ### 5. Prepare your Markdown files by copying them to the data/ directory
@@ -90,7 +101,7 @@ port = 8081
 ... ...
 ```
 
-The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files. When the embedding is complete, the API server will start.
+The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files.
 
 
 ### 7. Start the API server
