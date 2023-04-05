@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "repoInfo": "",
+    "repoInfo": "node fetch-repo-info.js",
     "dev": "npm run repoInfo && vite",
     "build": "npm run repoInfo && tsc && vite build --mode production",
     "preview": "vite preview"
@@ -43,7 +43,6 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
-    "terser": "^5.16.8",
     "typescript": "*",
     "vite": "^4.2.0"
   }
