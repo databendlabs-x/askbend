@@ -10,4 +10,9 @@
   color: var(--color-text-2);
   width: 760px;
   margin: 0 auto;
+  @include media {
+    width: 92%;
+    height: auto;
+    padding: 12px;
+  }
 }
