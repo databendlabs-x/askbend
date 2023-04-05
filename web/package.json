@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "repoInfo": "node fetch-repo-info.js",
+    "repoInfo": "",
     "dev": "npm run repoInfo && vite",
     "build": "npm run repoInfo && tsc && vite build --mode production",
     "preview": "vite preview"
