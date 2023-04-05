@@ -1,5 +1,4 @@
 // Copyright 2023 Datafuse Labs.
-import React from 'react';
 import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import clsx from 'clsx';

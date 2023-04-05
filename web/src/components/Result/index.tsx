@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import SuccessTip from './success-tip';
 import ResultCard from './result-card';
@@ -14,30 +14,33 @@ const Result: FC = (): ReactElement=> {
   const { resultsList, isFeatching, showErrorTip } =  useGetResultsState();
   const { isSwitch } =  useGetScrollInfo();
   return (
-    <div className={styles.resultArea} style={{paddingTop: isSwitch ? '218px':'unset'}}>
-      {
-        isFeatching  && <WaitCard />
-      }
-      {
-        resultsList?.length > 0 
-          ? <>{!isFeatching && <SuccessTip />}</>
-          : <>{isFeatching===undefined && <Introduction />}</>
-      }
-      <div className={styles.list}>
-        {
-          resultsList?.map((res: tResultsItem,index: number)=> {
-            if (index ==0) {
-              return  <ResultCard key={index} isFirst value={res.value}/>;
-            } else {
-              return  <ResultHistoryCard key={index} date={res.date} value={res.value}/>;
-            }
-          })
-        }
-      </div>
+    <>
       {
         showErrorTip && <ErrorTip />
       }
-    </div>
+      <div className={styles.resultArea} style={{paddingTop: isSwitch ? '218px':'unset'}}>
+        {
+          isFeatching  && <WaitCard />
+        }
+        {
+          resultsList?.length > 0 
+            ? <>{!isFeatching && <SuccessTip />}</>
+            : <>{isFeatching===undefined && <Introduction />}</>
+        }
+        <div className={styles.list}>
+          {
+            resultsList?.map((res: tResultsItem,index: number)=> {
+              if (index ==0) {
+                return  <ResultCard key={index} isFirst value={res.value}/>;
+              } else {
+                return  <ResultHistoryCard key={index} date={res.date} value={res.value}/>;
+              }
+            })
+          }
+        </div>
+      </div>
+    </>
+   
   );
 };
 export default Result;

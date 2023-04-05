@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 const GithubSvg: FC = (): ReactElement=> {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

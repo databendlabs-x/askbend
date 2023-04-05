@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import GithubSvg from '@/assets/svg/github';
 import { numberFormat } from '@/utils/tools';

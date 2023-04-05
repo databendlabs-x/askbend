@@ -1,5 +1,5 @@
 // Copyright 2022 Datafuse Labs.
-import React,{ FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import clsx from 'clsx';
 interface IProps {

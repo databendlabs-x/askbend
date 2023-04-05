@@ -7,7 +7,7 @@
       "DOM.Iterable",
       "ESNext"
     ],
-    "strict": false,
+    "strict": true,
     "allowJs": false,
     "checkJs": false,
     "skipLibCheck": true,

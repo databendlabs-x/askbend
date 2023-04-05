@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React,{ FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import PreviewJson from '@/assets/json/preview-question.json';
 import Card from 'components/Card';

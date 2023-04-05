@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React, { FC, ReactElement } from 'react';
+import { FC, ReactElement } from 'react';
 const CheckSvg: FC = (): ReactElement=> {
   return (
     <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">

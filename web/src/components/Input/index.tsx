@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FC, ReactElement } from 'react';
 import styles from './styles.module.less';
 import DatabendSvg from '@/assets/svg/databend';
