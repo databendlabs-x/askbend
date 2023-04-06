@@ -30,7 +30,7 @@ const QuestionInput: FC = (): ReactElement=> {
     };
   }, [queryText, isFeatching, isRegenerate]);
   useMount(()=> {
-    document.body.onclick = ()=> {
+    document.onclick = ()=> {
       setOpenExample(false);
     };
   });
@@ -43,6 +43,7 @@ const QuestionInput: FC = (): ReactElement=> {
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement> | any){
     const code = e.keyCode || e.which;
     if ((e.target as HTMLInputElement)?.id === INPUT_ID && code === KEY_CODE.ENTER) {
+      setOpenExample(false);
       if (isFeatching) return;
       getResults(isRegenerate);
     }
@@ -50,6 +51,7 @@ const QuestionInput: FC = (): ReactElement=> {
   async function getResults(isRegenerate = false, preQuestion?: string) {
     dispatchIsFetching(true);
     dispatchShowErrorTip(false);
+    setOpenExample(false);
     try{
       const data = await getAnswers(preQuestion ? preQuestion : queryText);
       if ([200, 201]?.includes(data?.status )) {
@@ -73,14 +75,12 @@ const QuestionInput: FC = (): ReactElement=> {
     setQueryText(value);
     setIsRegenerate(false);
     dispatchSetInputQuestion(value);
-    setOpenExample(!value);
+    setOpenExample(true);
     if (!value) {
       dispatchSetPreQuestion('');
     }
   }
-  function showExample() {
-    setOpenExample(!queryText);
-  }
+  
   return (
     <Tooltip
       placement='bottom'
@@ -104,11 +104,13 @@ const QuestionInput: FC = (): ReactElement=> {
           <DatabendSvg></DatabendSvg>
         </span>
         <input 
-          onClick={(e)=> e.stopPropagation()}
+          onClick={(e)=>{
+            e.stopPropagation();
+            setOpenExample(!isFeatching);
+          }}
           id={INPUT_ID}
           value={queryText}
           autoComplete="off"
-          onFocus={showExample}
           onChange={(e)=> changeQueryText(e)}
           placeholder='Ask AI a question?' 
           className={clsx(styles.input, isSwitch && styles.inputOthview, isRegenerate && styles.inputRegenerate)} type='text' />
