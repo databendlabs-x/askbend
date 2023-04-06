@@ -1,7 +1,16 @@
 .card {
-  margin-bottom: 12px;
+  display: flex;
+  gap: 8px;
   border: 2px solid var(--color-primary);
   span{
     line-height: 30px;
+  }
+  @include media {
+    padding: 8px!important;
+  }
+  .typed {
+    @include media {
+      font-size: 12px;
+    }
   }
 }

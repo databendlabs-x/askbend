@@ -5,8 +5,9 @@ import PreviewJson from '@/assets/json/preview-question.json';
 import Card from 'components/Card';
 import useResultsDispatch from '@/state/redux/dispatch/result';
 const Introduction: FC = (): ReactElement=> {
-  const { dispatchSetPreQuestion } = useResultsDispatch();
+  const { dispatchSetPreQuestion, dispatchSetInputQuestion } = useResultsDispatch();
   function selectedPreQuestion(content: string) {
+    dispatchSetInputQuestion('');
     dispatchSetPreQuestion(content);
   }
   return (
@@ -24,7 +25,8 @@ const Introduction: FC = (): ReactElement=> {
                   onClick={()=> selectedPreQuestion(prev)}
                   padding={[10, 12]}
                   key={index}>
-                🤔️ {prev}
+                  <span>🤔️ </span>
+                  <span>{prev}</span>
                 </Card>
               );
             })

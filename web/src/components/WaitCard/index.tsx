@@ -22,7 +22,6 @@ const WaitCard: FC = (): ReactElement=> {
   });
   useEffect(()=> {
     if (isFeatching === false) {
-      setTypeSpeed(0);
       setInterval(undefined);
     }
   }, [isFeatching]);

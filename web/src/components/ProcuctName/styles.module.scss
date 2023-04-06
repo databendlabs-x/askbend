@@ -8,6 +8,10 @@
       font-weight: 600;
       color: var(--color-primary);
     }
+    @include media {
+      font-size: 36px;
+      line-height: 52px;
+    }
   }
   .sponser {
     font-size: 14px;

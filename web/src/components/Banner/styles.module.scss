@@ -1,5 +1,7 @@
 .banner {
   padding: 20px;
+  position: relative;
+  z-index: 1;
   .content {
     height: 302px;
     display: flex;

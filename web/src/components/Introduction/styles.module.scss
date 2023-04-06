@@ -17,6 +17,9 @@
     &:hover{
       border-color: var(--color-primary)!important;
     }
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
   }
 }
 .introPhone {
