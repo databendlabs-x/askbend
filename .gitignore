@@ -8,7 +8,7 @@
 
 # Rust
 target/
-
+web/src/assets/json/repo-info.json
 # Test
 _test_output_dir
 outputs
