@@ -7,8 +7,9 @@ interface IProps {
   itemClick: ()=> void;
 }
 const Examples: FC<IProps> = ({itemClick}): ReactElement=> {
-  const { dispatchSetPreQuestion } = useResultsDispatch();
+  const { dispatchSetPreQuestion, dispatchSetInputQuestion } = useResultsDispatch();
   function selectedPreQuestion(content: string) {
+    dispatchSetInputQuestion('');
     dispatchSetPreQuestion(content);
     itemClick();
   }

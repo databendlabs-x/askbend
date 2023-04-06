@@ -76,9 +76,7 @@ const QuestionInput: FC = (): ReactElement=> {
     setIsRegenerate(false);
     dispatchSetInputQuestion(value);
     setOpenExample(true);
-    if (!value) {
-      dispatchSetPreQuestion('');
-    }
+    dispatchSetPreQuestion('');
   }
   
   return (
