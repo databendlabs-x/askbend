@@ -96,6 +96,9 @@
       gap: 10px;
       cursor: not-allowed;
     }
+    @include media {
+      font-size: 12px;
+    }
   }
 }
 

@@ -7,6 +7,9 @@
   }
   @include media {
     padding: 8px!important;
+    span{
+      line-height: 22px;
+    }
   }
   .typed {
     @include media {

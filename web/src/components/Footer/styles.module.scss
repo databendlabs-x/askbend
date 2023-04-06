@@ -31,7 +31,6 @@
     text-decoration: none;
   }
   @include media {
-    // position: static;
     flex-direction: column;
     padding-top: 12px;
     padding-bottom: 12px;
