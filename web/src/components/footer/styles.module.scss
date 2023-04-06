@@ -33,8 +33,10 @@
   @include media {
     // position: static;
     flex-direction: column;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
     span{
       text-align: center;
     }
