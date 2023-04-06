@@ -15,8 +15,10 @@ import { scrollToTop } from '@/utils/tools';
 import { getAnswers } from '@/api';
 import { Tooltip } from 'antd';
 import Examples from './examples';
+import { deviceType } from '@/utils/device-type';
 const QuestionInput: FC = (): ReactElement=> {
   const INPUT_ID = 'question-input';
+  const { isPhone } = deviceType();
   const { isSwitch } =  useGetScrollInfo();
   const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip, dispatchSetInputQuestion, dispatchSetPreQuestion } =  useResultsDispatch();
   const [queryText, setQueryText] = useSafeState('');
@@ -83,7 +85,7 @@ const QuestionInput: FC = (): ReactElement=> {
     <Tooltip
       placement='bottom'
       arrow={false}
-      open={openExample}
+      open={isPhone ? false : openExample}
       overlayStyle={{
         width: '760px',
         padding: '0',

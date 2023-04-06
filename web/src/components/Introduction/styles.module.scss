@@ -19,3 +19,9 @@
     }
   }
 }
+.introPhone {
+  display: none;
+  @include media {
+    display: block;
+  }
+}
