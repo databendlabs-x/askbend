@@ -59,7 +59,7 @@ impl DatabendDriver {
             for snippet in &snippet_file.code_snippets {
                 val_vec.push(format!(
                     "('{}', '{}')",
-                    snippet_file.file_path,
+                    escape_sql_string(&snippet_file.file_path),
                     remove_markdown_links(&escape_sql_string(snippet))
                 ));
             }
