@@ -98,3 +98,29 @@
     }
   }
 }
+
+
+.examples {
+  .header {
+    border-bottom: 1px dashed rgb(47 47 47);
+    padding-bottom: 12px;
+    padding-left: 12px;
+    padding-top: 8px;
+    color: rgba(255,255,255, 0.7);
+  }
+  .list {
+    margin-top: 6px;
+    padding-bottom: 6px;
+    .item {
+      height: 44px;
+      line-height: 44px;
+      border-radius: 6px;
+      cursor: pointer;
+      padding-left: 12px;
+      &:hover {
+        background-color: rgba(50,50,50,.8);
+      }
+    }
+  }
+ 
+}
