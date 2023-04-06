@@ -2,11 +2,7 @@
 import { FC, ReactElement } from 'react';
 import Entry from './components/Entry';
 const App: FC = (): ReactElement=> {
-  return (
-    <div>
-      <Entry></Entry>
-    </div>
-  );
+  return (<Entry></Entry>);
 };
 
 export default App;
