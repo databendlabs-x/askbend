@@ -2,7 +2,7 @@
 import { FC, ReactElement } from 'react';
 import Banner from 'components/Banner/banner';
 import Result from 'components/Result';
-import Footer from 'components/footer';
+import Footer from '@/components/Foot';
 const Entry: FC = (): ReactElement=> {
   return (
     <>
