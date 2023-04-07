@@ -72,16 +72,26 @@ impl DatabendDriver {
         self.conn.exec(&final_sql).await
     }
 
-    pub async fn insert_answer(&self, query: &str, answer: &str) -> Result<()> {
+    pub async fn insert_answer(
+        &self,
+        query: &str,
+        prompt: &str,
+        similar_distances: &[f32],
+        similar_sections: &[String],
+        answer: &str,
+    ) -> Result<()> {
         if self.anwser_table.is_empty() {
             return Ok(());
         }
 
         let sql = format!(
-            "INSERT INTO {}.{} (question, answer) VALUES ('{}', '{}')",
+            "INSERT INTO {}.{} (question, prompt, similar_distances, similar_sections, answer) VALUES ('{}','{}', {:?}, {:?}, '{}')",
             self.database,
             self.anwser_table,
             escape_sql_string(query),
+            escape_sql_string(prompt),
+            similar_distances,
+            similar_sections,
             escape_sql_string(answer)
         );
         self.conn.exec(&sql).await
@@ -113,7 +123,10 @@ impl DatabendDriver {
         }
     }
 
-    pub async fn get_similar_sections(&self, query_embedding: &str) -> Result<Vec<String>> {
+    pub async fn get_similar_sections(
+        &self,
+        query_embedding: &str,
+    ) -> Result<(Vec<String>, Vec<f32>)> {
         let mut similar_sections = vec![];
         let mut similar_distances = vec![];
 
@@ -133,9 +146,7 @@ impl DatabendDriver {
             similar_sections.push(section_tuple.0);
             similar_distances.push(section_tuple.1);
         }
-        info!("distance similar distances: {:?}", similar_distances);
-
-        Ok(similar_sections)
+        Ok((similar_sections, similar_distances))
     }
 
     /// Build all the embedding which is empty.
@@ -167,34 +178,37 @@ impl DatabendDriver {
 
         // 2. Get the similar sections.
         let now = Instant::now();
-        let similar_sections = self.get_similar_sections(&query_embedding).await?;
+        let (similar_sections, similar_distances) =
+            self.get_similar_sections(&query_embedding).await?;
         info!(
-            "get similar, query={}, sections={:?}, cost={:?}",
+            "get similar, query=[{}], similar_distances={:?}, sections={:?}, cost={:?}",
             query,
+            similar_distances,
             similar_sections,
             now.elapsed().as_secs()
         );
 
         // 3. Get the sections completion.
+        let mut prompt = "".to_string();
         let completion = if similar_sections.is_empty() {
             let sections_text = similar_sections.to_vec().join(" ");
             let mut sections_text = remove_markdown_links(&sections_text);
-            let prompt = self.prompt_template.clone();
+            prompt = self.prompt_template.clone();
             // Keep the section is no larger.
             {
                 let template_len = prompt.len();
                 sections_text.truncate(8192 - template_len);
             }
 
-            let prompt = prompt.replace("{{context}}", &sections_text);
-            let prompt = prompt.replace("{{query}}", query);
+            prompt = prompt.replace("{{context}}", &sections_text);
+            prompt = prompt.replace("{{query}}", query);
 
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
+            info!("get completion, query=[{}], prompt=[{:?}]", query, prompt,);
             info!(
-                "get completion, query={},\nprompt={:?}\n,completion={:?},\ncost={:?}",
+                "get completion, query=[{}], completion={:?}, cost={:?}",
                 query,
-                prompt,
                 similar_sections,
                 now.elapsed().as_secs()
             );
@@ -205,7 +219,14 @@ impl DatabendDriver {
         };
 
         let now = Instant::now();
-        self.insert_answer(query, &completion).await?;
+        self.insert_answer(
+            query,
+            &prompt,
+            &similar_distances,
+            &similar_sections,
+            &completion,
+        )
+        .await?;
         info!(
             "insert answer table, query={}, cost={:?}",
             query,
