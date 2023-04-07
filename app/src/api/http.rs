@@ -46,6 +46,7 @@ impl APIHandler {
                 .app_data(web::Data::new(data.clone()))
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
+                .service(actix_files::Files::new("/", "./web/dist/").index_file("index.html"))
         })
         .bind(format!("{}:{}", host, port))?
         .run()
