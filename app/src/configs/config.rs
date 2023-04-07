@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::fmt::{Debug, Formatter};
-use std::{env, fmt};
+use std::env;
+use std::fmt;
+use std::fmt::Debug;
+use std::fmt::Formatter;
 
 use anyhow::Result;
 use clap::Parser;

@@ -14,13 +14,22 @@
 
 use actix_web::web;
 use actix_web::App;
+use actix_web::HttpResponse;
 use actix_web::HttpServer;
+use actix_web::Responder;
 use anyhow::Result;
+use log::debug;
+use mime_guess::from_path;
+use rust_embed::RustEmbed;
 
 use crate::api::query::query_handler;
 use crate::api::status::status_handler;
 use crate::configs::ServerConfig;
 use crate::DatabendDriver;
+
+#[derive(RustEmbed)]
+#[folder = "../web/dist/"]
+struct Asset;
 
 pub struct APIHandler {
     pub conf: ServerConfig,
@@ -46,11 +55,33 @@ impl APIHandler {
                 .app_data(web::Data::new(data.clone()))
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
+                .service(index)
+                .service(dist)
         })
         .bind(format!("{}:{}", host, port))?
         .run()
         .await?;
 
         Ok(())
+    }
+}
+
+#[actix_web::get("/")]
+async fn index() -> impl Responder {
+    handle_embedded_file("index.html")
+}
+
+#[actix_web::get("/{_:.*}")]
+async fn dist(path: web::Path<String>) -> impl Responder {
+    handle_embedded_file(path.as_str())
+}
+
+fn handle_embedded_file(path: &str) -> HttpResponse {
+    debug!("visit static file: {path}");
+    match Asset::get(path) {
+        Some(content) => HttpResponse::Ok()
+            .content_type(from_path(path).first_or_octet_stream().as_ref())
+            .body(content.data.into_owned()),
+        None => HttpResponse::NotFound().body("404 Not Found"),
     }
 }
