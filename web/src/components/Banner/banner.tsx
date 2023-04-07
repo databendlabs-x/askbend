@@ -17,7 +17,7 @@ const Banner: FC = (): ReactElement=> {
               <QuestionInput />
             </div>
           </div>
-          :  <div className={styles.banner}>
+          :  <div className={styles.banner} id='askbend_top_banner'>
             <div className={styles.content}>
               <ProductName />
               <QuestionInput />

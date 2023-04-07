@@ -136,6 +136,7 @@ span.type-line-two{
   color: var(--color-text-1);
 }
 span.type-line-question {
+  word-break: break-word;
   border: 1px dashed var(--color-border);
   padding: 2px 6px;
   border-radius: 6px;

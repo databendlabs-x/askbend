@@ -2,15 +2,16 @@
   padding: 20px;
   position: relative;
   z-index: 1;
+  height: auto;
   .content {
-    height: 302px;
+    min-height: 302px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
     border-radius: 12px;
-    padding-top: 80px;
-    padding-bottom: 40px;
+    padding-top: 55px;
+    padding-bottom: 20px;
     background-color: var(--color-bg-0);
   }
   &.secondBanner {
@@ -23,7 +24,7 @@
     align-items: center;
     justify-content: center;
     .content {
-      height: auto;
+      min-height: unset;
       width: 100%;
       padding-top: 20px;
       padding-bottom: 20px;
@@ -44,7 +45,8 @@
       width: 100%;
       padding-top: 20px;
       padding-bottom: 20px;
-      height: 200px;
+      height: auto;
+      min-height: 200px;
     }
   }
 }
