@@ -31,7 +31,5 @@ markdown = "0.3.0"
 tokio = { version = "1.19.2", features = ["full"] }
 tokio-stream = "0.1.12"
 walkdir = "2.3.3"
-rust-embed = "6"
-mime_guess = "2"
 
 [dev-dependencies]

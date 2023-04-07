@@ -19,9 +19,8 @@ use tokio::time::Instant;
 use tokio_stream::StreamExt;
 
 use crate::base::escape_sql_string;
-use crate::remove_markdown_links;
-use crate::Config;
 use crate::SnippetFiles;
+use crate::{remove_markdown_links, Config};
 
 #[derive(Clone)]
 pub struct DatabendDriver {
