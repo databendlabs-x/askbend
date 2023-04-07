@@ -85,7 +85,7 @@ impl DatabendDriver {
         }
 
         let sql = format!(
-            "INSERT INTO {}.{} (question, prompt, similar_distances, similar_sections, answer) VALUES ('{}','{}', {:?}, {:?}, '{}')",
+            "INSERT INTO {}.{} (question, prompt, similar_distances, similar_sections, answer) VALUES ('{}','{}', {:?}, '{}', '{}')",
             self.database,
             self.anwser_table,
             escape_sql_string(query),
