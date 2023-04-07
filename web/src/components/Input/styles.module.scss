@@ -13,18 +13,19 @@
   padding-left: 44px;
   padding-right: 70px;
   padding-bottom: 12px;
-  font-size: 13.3px;
+  font-weight: 600;
+  font-size: 14px;
   font-family: 'Poppins';
   font-style: normal;
   border: unset;
   width: 760px;
   background: var(--color-bg-5);
-  font-weight: 400;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   color: rgba(255,255,255, 1);
   &::placeholder{
     color: rgba(255,255,255, 0.7);
+    font-weight: 400;
   }
   &.textareaOthview {
     width: 557px;
