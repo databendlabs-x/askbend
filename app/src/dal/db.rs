@@ -77,7 +77,7 @@ impl DatabendDriver {
         query: &str,
         prompt: &str,
         similar_distances: &[f32],
-        similar_sections: &[String],
+        similar_sections: &str,
         answer: &str,
     ) -> Result<()> {
         if self.anwser_table.is_empty() {
@@ -91,7 +91,7 @@ impl DatabendDriver {
             escape_sql_string(query),
             escape_sql_string(prompt),
             similar_distances,
-            similar_sections,
+            escape_sql_string(similar_sections),
             escape_sql_string(answer)
         );
         self.conn.exec(&sql).await
@@ -190,9 +190,10 @@ impl DatabendDriver {
 
         // 3. Get the sections completion.
         let mut prompt = "".to_string();
+        let mut sections_text = "".to_string();
         let completion = if similar_sections.is_empty() {
-            let sections_text = similar_sections.to_vec().join(" ");
-            let mut sections_text = remove_markdown_links(&sections_text);
+            sections_text = similar_sections.to_vec().join(" ");
+            sections_text = remove_markdown_links(&sections_text);
             prompt = self.prompt_template.clone();
             // Keep the section is no larger.
             {
@@ -223,7 +224,7 @@ impl DatabendDriver {
             query,
             &prompt,
             &similar_distances,
-            &similar_sections,
+            &sections_text,
             &completion,
         )
         .await?;
