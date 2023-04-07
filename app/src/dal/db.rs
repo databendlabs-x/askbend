@@ -171,7 +171,7 @@ impl DatabendDriver {
         );
 
         // 3. Get the sections completion.
-        if similar_sections.is_empty() {
+        let completion = if similar_sections.is_empty() {
             let sections_text = similar_sections.to_vec().join(" ");
             let mut sections_text = remove_markdown_links(&sections_text);
             let prompt = self.prompt_template.clone();
@@ -194,11 +194,19 @@ impl DatabendDriver {
                 now.elapsed().as_secs()
             );
 
-            self.insert_answer(query, &context_completion).await?;
-
-            Ok(vec![context_completion])
+            context_completion
         } else {
-            Ok(vec![])
-        }
+            "".to_string()
+        };
+
+        let now = Instant::now();
+        self.insert_answer(query, &completion).await?;
+        info!(
+            "insert:{} into answer table, cost:{:?}",
+            query,
+            now.elapsed().as_secs()
+        );
+
+        Ok(vec![completion])
     }
 }
