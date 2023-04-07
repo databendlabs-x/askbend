@@ -16,6 +16,7 @@ use actix_web::http::StatusCode;
 use actix_web::web;
 use actix_web::HttpResponse;
 use actix_web::Responder;
+use log::error;
 
 use crate::DatabendDriver;
 
@@ -48,6 +49,9 @@ pub async fn query_handler(
             };
             HttpResponse::Ok().json(response)
         }
-        Err(e) => HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).json(format!("{:?}", e)),
+        Err(e) => {
+            error!("query handler error:{:?}", e);
+            HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).json(format!("{:?}", e))
+        }
     }
 }

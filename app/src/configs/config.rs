@@ -79,6 +79,8 @@ pub struct DatabaseConfig {
     pub database: String,
     #[clap(long = "table", default_value_t)]
     pub table: String,
+    #[clap(long = "answer_table", default_value_t)]
+    pub answer_table: String,
     #[clap(long = "dsn", default_value_t)]
     pub dsn: String,
 }
@@ -88,6 +90,7 @@ impl Debug for DatabaseConfig {
         f.debug_struct("DatabaseConfig")
             .field("database", &self.database)
             .field("table", &self.table)
+            .field("answer_table", &self.answer_table)
             .field("dsn", &"******")
             .finish()
     }
@@ -98,6 +101,7 @@ impl Default for DatabaseConfig {
         DatabaseConfig {
             database: "".to_string(),
             table: "".to_string(),
+            answer_table: "".to_string(),
             dsn: "".to_string(),
         }
     }
