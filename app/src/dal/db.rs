@@ -191,7 +191,7 @@ impl DatabendDriver {
         // 3. Get the sections completion.
         let mut prompt = "".to_string();
         let mut sections_text = "".to_string();
-        let completion = if similar_sections.is_empty() {
+        let completion = if !similar_sections.is_empty() {
             sections_text = similar_sections.to_vec().join(" ");
             sections_text = remove_markdown_links(&sections_text);
             prompt = self.prompt_template.clone();
