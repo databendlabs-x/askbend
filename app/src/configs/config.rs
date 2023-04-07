@@ -90,6 +90,7 @@ impl Debug for DatabaseConfig {
         f.debug_struct("DatabaseConfig")
             .field("database", &self.database)
             .field("table", &self.table)
+            .field("answer_table", &self.answer_table)
             .field("dsn", &"******")
             .finish()
     }
