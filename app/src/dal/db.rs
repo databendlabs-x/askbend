@@ -160,7 +160,7 @@ impl DatabendDriver {
             return Ok(vec![]);
         }
         info!(
-            " get query:{} embedding, cost:{:?}",
+            "get embedding, query={}, cost={:?}",
             query,
             now.elapsed().as_secs()
         );
@@ -169,7 +169,7 @@ impl DatabendDriver {
         let now = Instant::now();
         let similar_sections = self.get_similar_sections(&query_embedding).await?;
         info!(
-            "get query:{} similar sections:{:?}, cost:{:?}",
+            "get similar, query={}, sections={:?}, cost={:?}",
             query,
             similar_sections,
             now.elapsed().as_secs()
@@ -192,7 +192,7 @@ impl DatabendDriver {
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
             info!(
-                "get context completion, query:{}\n prompt:{:?}\n, completion:{:?}\ncost:{:?}",
+                "get completion, query={},\nprompt={:?}\n,completion={:?},\ncost={:?}",
                 query,
                 prompt,
                 similar_sections,
@@ -207,7 +207,7 @@ impl DatabendDriver {
         let now = Instant::now();
         self.insert_answer(query, &completion).await?;
         info!(
-            "insert query:{} into answer table, cost:{:?}",
+            "insert answer table, query={}, cost={:?}",
             query,
             now.elapsed().as_secs()
         );
