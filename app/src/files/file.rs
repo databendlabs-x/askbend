@@ -16,8 +16,7 @@ use std::fs;
 use std::time::SystemTime;
 
 use anyhow::Result;
-use walkdir::DirEntry;
-use walkdir::WalkDir;
+use walkdir::{DirEntry, WalkDir};
 
 #[derive(Clone, Debug)]
 pub struct FileMeta {
