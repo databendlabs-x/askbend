@@ -14,13 +14,20 @@
 
 use actix_web::web;
 use actix_web::App;
+use actix_web::HttpResponse;
 use actix_web::HttpServer;
+use actix_web::Responder;
 use anyhow::Result;
+use rust_embed::RustEmbed;
 
 use crate::api::query::query_handler;
 use crate::api::status::status_handler;
 use crate::configs::ServerConfig;
 use crate::DatabendDriver;
+
+#[derive(RustEmbed)]
+#[folder = "../web/dist/"]
+struct Asset;
 
 pub struct APIHandler {
     pub conf: ServerConfig,
@@ -46,12 +53,24 @@ impl APIHandler {
                 .app_data(web::Data::new(data.clone()))
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
-                .service(actix_files::Files::new("/", "./web/dist/").index_file("index.html"))
+                .service(index)
         })
         .bind(format!("{}:{}", host, port))?
         .run()
         .await?;
 
         Ok(())
+    }
+}
+
+#[actix_web::get("/")]
+async fn index() -> impl Responder {
+    handle_embedded_file("index.html")
+}
+
+fn handle_embedded_file(path: &str) -> HttpResponse {
+    match Asset::get(path) {
+        Some(content) => HttpResponse::Ok().body(content.data.into_owned()),
+        None => HttpResponse::NotFound().body("404 Not Found"),
     }
 }
