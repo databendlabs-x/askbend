@@ -1,33 +1,43 @@
 .wrap {
   position: relative;
+  display: inline-flex;
   @include media {
     width: 96%;
   }
 }
-.input {
+.textarea {
+  height: auto;
+  resize: none;
   outline: unset;
+  padding-top: 12px;
+  padding-left: 44px;
+  padding-right: 70px;
+  padding-bottom: 12px;
+  font-size: 13.3px;
+  font-family: 'Poppins';
+  font-style: normal;
   border: unset;
   width: 760px;
-  height: 48px;
   background: var(--color-bg-5);
   font-weight: 400;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   color: rgba(255,255,255, 1);
-  padding-left: 44px;
-  padding-right: 44px;
   &::placeholder{
     color: rgba(255,255,255, 0.7);
   }
-  &.inputOthview {
+  &.textareaOthview {
     width: 557px;
   }
-  &.inputRegenerate {
+  &.textareaRegenerate {
     padding-right: 120px;
+  }
+  &.textareaFetching {
+    padding-right: 70px!important;
   }
 }
 @include media {
-  .input {
+  .textarea {
     width: 100%;
   }
 }
@@ -60,7 +70,7 @@
     width: 24px;
     height: 24px;
     right: 12px;
-    top: calc(50% - 24px/2);
+    top: 12px;
     border-radius: 4px;
     background-color: var(--color-primary);
     display: flex;
@@ -82,7 +92,7 @@
     padding-right: 8px;
     height: 24px;
     right: 12px;
-    top: calc(50% - 24px/2);
+    top: 12px;
     background-color: var(--color-primary);
     border-radius: 4px;
     color: var(--color-white );
@@ -126,4 +136,14 @@
     }
   }
  
+}
+.countLimit {
+  position: absolute;
+  font-size: 12px;
+  right: 8px;
+  bottom: -2px;
+  color: var(--color-fill-2);
+}
+.maxLength {
+  color: #FFC107;
 }

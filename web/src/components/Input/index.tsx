@@ -1,5 +1,5 @@
 // Copyright 2023 Datafuse Labs.
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FC, ReactElement } from 'react';
 import styles from './styles.module.scss';
 import DatabendSvg from '@/assets/svg/databend';
@@ -16,8 +16,9 @@ import { getAnswers } from '@/api';
 import { Tooltip } from 'antd';
 import Examples from './examples';
 import { deviceType } from '@/utils/device-type';
+import CountLength from './count-length';
 const QuestionInput: FC = (): ReactElement=> {
-  const INPUT_ID = 'question-input';
+  const TEXTAREA_ID = 'question-input';
   const { isPhone } = deviceType();
   const { isSwitch } =  useGetScrollInfo();
   const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip, dispatchSetInputQuestion, dispatchSetPreQuestion } =  useResultsDispatch();
@@ -25,12 +26,27 @@ const QuestionInput: FC = (): ReactElement=> {
   const { isFeatching, preQuestion } = useGetResultsState();
   const [isRegenerate, setIsRegenerate] = useState(false);
   const [openExample, setOpenExample] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useEffect(()=>{
     window.addEventListener('keydown', onKeyDown);
     return ()=>{
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [queryText, isFeatching, isRegenerate]);
+  useEffect(() => {
+    if (textareaRef.current) {
+      autoResize();
+    }
+    document.body.onscroll=()=> {
+      setOpenExample(false);
+    };
+    return ()=> {
+      document.body.onscroll = null;
+    };
+  }, []);
+  useEffect(()=> {
+    autoResize();
+  }, [isSwitch]);
   useMount(()=> {
     document.onclick = ()=> {
       setOpenExample(false);
@@ -44,8 +60,9 @@ const QuestionInput: FC = (): ReactElement=> {
   }, [preQuestion]);
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement> | any){
     const code = e.keyCode || e.which;
-    if ((e.target as HTMLInputElement)?.id === INPUT_ID && code === KEY_CODE.ENTER) {
+    if ((e.target as HTMLInputElement)?.id === TEXTAREA_ID && code === KEY_CODE.ENTER) {
       setOpenExample(false);
+      e.preventDefault();
       if (isFeatching) return;
       getResults(isRegenerate);
     }
@@ -72,13 +89,20 @@ const QuestionInput: FC = (): ReactElement=> {
       dispatchIsFetching(false);
     }
   }
-  function changeQueryText(e: React.ChangeEvent<HTMLInputElement>) {
+  function changeQueryText(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const value = e?.target?.value;
     setQueryText(value);
     setIsRegenerate(false);
     dispatchSetInputQuestion(value);
     setOpenExample(true);
     dispatchSetPreQuestion('');
+  }
+  function autoResize() {
+    const textarea = textareaRef?.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
   }
   
   return (
@@ -87,7 +111,7 @@ const QuestionInput: FC = (): ReactElement=> {
       arrow={false}
       open={isPhone ? false : openExample}
       overlayStyle={{
-        width: '760px',
+        width: isSwitch?'557px':'760px',
         padding: '0',
         background: 'rgba(0,3,10,1.00)',
         borderRadius: '6px',
@@ -101,19 +125,28 @@ const QuestionInput: FC = (): ReactElement=> {
       }}/>}>
       <span className={styles.wrap}>
         <span className={styles.prefix}>
-          <DatabendSvg></DatabendSvg>
+          <DatabendSvg />
         </span>
-        <input 
+        <textarea 
+          ref={textareaRef}
           onClick={(e)=>{
             e.stopPropagation();
             setOpenExample(!isFeatching);
           }}
-          id={INPUT_ID}
+          maxLength={500}
+          id={TEXTAREA_ID}
+          rows={2}
           value={queryText}
           autoComplete="off"
+          onInput={autoResize}
           onChange={(e)=> changeQueryText(e)}
           placeholder='Ask AI a question?' 
-          className={clsx(styles.input, isSwitch && styles.inputOthview, isRegenerate && styles.inputRegenerate)} type='text' />
+          className={clsx(
+            styles.textarea, 
+            isSwitch && styles.textareaOthview, 
+            isRegenerate && styles.textareaRegenerate,
+            isFeatching && styles.textareaFetching
+          )} />
         <span className={styles.suffix}>
           {
             isFeatching ? (
@@ -123,7 +156,7 @@ const QuestionInput: FC = (): ReactElement=> {
                 <span 
                   onClick={() => getResults(true)}
                   className={styles.regenerate}>
-                  Regenerate
+                    Regenerate
                 </span>
               ) : (
                 queryText ? (
@@ -139,6 +172,7 @@ const QuestionInput: FC = (): ReactElement=> {
             )
           }
         </span>
+        <CountLength queryText={queryText}/>
       </span>
     </Tooltip>
   );
