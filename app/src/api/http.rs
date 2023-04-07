@@ -18,6 +18,8 @@ use actix_web::HttpResponse;
 use actix_web::HttpServer;
 use actix_web::Responder;
 use anyhow::Result;
+use log::debug;
+use mime_guess::from_path;
 use rust_embed::RustEmbed;
 
 use crate::api::query::query_handler;
@@ -54,6 +56,7 @@ impl APIHandler {
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
                 .service(index)
+                .service(dist)
         })
         .bind(format!("{}:{}", host, port))?
         .run()
@@ -68,9 +71,17 @@ async fn index() -> impl Responder {
     handle_embedded_file("index.html")
 }
 
+#[actix_web::get("/{_:.*}")]
+async fn dist(path: web::Path<String>) -> impl Responder {
+    handle_embedded_file(path.as_str())
+}
+
 fn handle_embedded_file(path: &str) -> HttpResponse {
+    debug!("visit static file: {path}");
     match Asset::get(path) {
-        Some(content) => HttpResponse::Ok().body(content.data.into_owned()),
+        Some(content) => HttpResponse::Ok()
+            .content_type(from_path(path).first_or_octet_stream().as_ref())
+            .body(content.data.into_owned()),
         None => HttpResponse::NotFound().body("404 Not Found"),
     }
 }

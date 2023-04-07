@@ -303,6 +303,7 @@ dependencies = [
  "env_logger",
  "log",
  "markdown",
+ "mime_guess",
  "proc-macro2",
  "quote",
  "regex",
