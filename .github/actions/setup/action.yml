@@ -37,3 +37,14 @@ runs:
         # Enable sccache
         echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
         echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+
+    - name: Setup node
+      uses: actions/setup-node@v3
+    - name: Install dependencies
+      working-directory: ./web
+      shell: bash
+      run: yarn install
+    - name: Install dependencies
+      working-directory: ./web
+      shell: bash
+      run: yarn build
