@@ -78,7 +78,7 @@ impl DatabendDriver {
         }
 
         let sql = format!(
-            "INSERT INTO {}.{} (question, answer) VALUE('{}', '{}')",
+            "INSERT INTO {}.{} (question, answer) VALUES ('{}', '{}')",
             self.database,
             self.anwser_table,
             escape_sql_string(query),
@@ -159,13 +159,18 @@ impl DatabendDriver {
         if query_embedding.is_empty() {
             return Ok(vec![]);
         }
-        info!("1) get query embedding, cost:{:?}", now.elapsed().as_secs());
+        info!(
+            " get query:{} embedding, cost:{:?}",
+            query,
+            now.elapsed().as_secs()
+        );
 
         // 2. Get the similar sections.
         let now = Instant::now();
         let similar_sections = self.get_similar_sections(&query_embedding).await?;
         info!(
-            "2) get similar sections:{:?}, cost:{:?}",
+            "get query:{} similar sections:{:?}, cost:{:?}",
+            query,
             similar_sections,
             now.elapsed().as_secs()
         );
@@ -187,7 +192,7 @@ impl DatabendDriver {
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
             info!(
-                "3) get context completion, query:{}\n prompt:{:?}\n, completion:{:?}\ncost:{:?}",
+                "get context completion, query:{}\n prompt:{:?}\n, completion:{:?}\ncost:{:?}",
                 query,
                 prompt,
                 similar_sections,
@@ -202,7 +207,7 @@ impl DatabendDriver {
         let now = Instant::now();
         self.insert_answer(query, &completion).await?;
         info!(
-            "insert:{} into answer table, cost:{:?}",
+            "insert query:{} into answer table, cost:{:?}",
             query,
             now.elapsed().as_secs()
         );
