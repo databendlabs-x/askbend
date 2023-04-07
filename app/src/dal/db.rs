@@ -26,6 +26,7 @@ use crate::{remove_markdown_links, Config};
 pub struct DatabendDriver {
     pub database: String,
     pub table: String,
+    pub anwser_table: String,
     pub min_content_length: usize,
     pub max_content_length: usize,
     pub top: usize,
@@ -39,6 +40,7 @@ impl DatabendDriver {
         Ok(DatabendDriver {
             database: conf.database.database.clone(),
             table: conf.database.table.clone(),
+            anwser_table: conf.database.answer_table.clone(),
             min_content_length: conf.query.min_content_length,
             max_content_length: conf.query.max_content_length,
             top: conf.query.top,
@@ -70,6 +72,72 @@ impl DatabendDriver {
         self.conn.exec(&final_sql).await
     }
 
+    pub async fn insert_answer(&self, query: &str, answer: &str) -> Result<()> {
+        if self.anwser_table.is_empty() {
+            return Ok(());
+        }
+
+        let sql = format!(
+            "INSERT INTO {}.{} (question, answer) VALUE('{}', '{}')",
+            self.database,
+            self.anwser_table,
+            escape_sql_string(query),
+            escape_sql_string(answer)
+        );
+        self.conn.exec(&sql).await
+    }
+
+    pub async fn get_embedding(&self, text: &str) -> Result<String> {
+        let query = format!("SELECT ai_embedding_vector('{}')", escape_sql_string(text));
+        type RowResult = (String,);
+        let row = self.conn.query_row(&query).await?;
+
+        if let Some(row) = row {
+            let result: RowResult = row.try_into()?;
+            Ok(result.0)
+        } else {
+            Ok("".to_string())
+        }
+    }
+
+    pub async fn get_completion(&self, text: &str) -> Result<String> {
+        let query = format!("SELECT ai_text_completion('{}')", escape_sql_string(text));
+        type RowResult = (String,);
+        let row = self.conn.query_row(&query).await?;
+
+        if let Some(row) = row {
+            let result: RowResult = row.try_into()?;
+            Ok(result.0)
+        } else {
+            Ok("".to_string())
+        }
+    }
+
+    pub async fn get_similar_sections(&self, query_embedding: &str) -> Result<Vec<String>> {
+        let mut similar_sections = vec![];
+        let mut similar_distances = vec![];
+
+        let sql = format!(
+            "SELECT content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} ORDER BY distance ASC LIMIT {}",
+            query_embedding,
+            self.database,
+            self.table,
+            self.min_content_length,
+            self.top
+        );
+
+        type RowResult = (String, f32);
+        let mut rows = self.conn.query_iter(&sql).await?;
+        while let Some(row) = rows.next().await {
+            let section_tuple: RowResult = row?.try_into()?;
+            similar_sections.push(section_tuple.0);
+            similar_distances.push(section_tuple.1);
+        }
+        info!("distance similar distances: {:?}", similar_distances);
+
+        Ok(similar_sections)
+    }
+
     /// Build all the embedding which is empty.
     /// post each content to openai
     /// openai returns embedding vector
@@ -85,43 +153,28 @@ impl DatabendDriver {
 
     /// Get a similarly content.
     pub async fn query(&self, query: &str) -> Result<Vec<String>> {
-        let mut similar_sections = vec![];
-        let mut similar_distances = vec![];
-
-        info!("distance query start");
+        // 1. Get the query embedding.
         let now = Instant::now();
-        // Retrieve sections with the highest similarity to the input query.
-        {
-            let sql = format!(
-                "SELECT content, cosine_distance(ai_embedding_vector('{}'), embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} ORDER BY distance ASC LIMIT {}",
-                escape_sql_string(query),
-                self.database,
-                self.table,
-                self.min_content_length,
-                self.top
-            );
-
-            type RowResult = (String, f32);
-            let mut rows = self.conn.query_iter(&sql).await?;
-            while let Some(row) = rows.next().await {
-                let section_tuple: RowResult = row?.try_into()?;
-                similar_sections.push(section_tuple.0);
-                similar_distances.push(section_tuple.1);
-            }
+        let query_embedding = self.get_embedding(query).await?;
+        if query_embedding.is_empty() {
+            return Ok(vec![]);
         }
-        info!("distance query end cost:{:?}", now.elapsed().as_secs());
-        info!("distance similar distances: {:?}", similar_distances);
-        info!("distance similar sections: {:?}", similar_sections);
+        info!("1) get query embedding, cost:{:?}", now.elapsed().as_secs());
 
+        // 2. Get the similar sections.
         let now = Instant::now();
-        // Perform text completion if similar sections are found.
-        if !similar_sections.is_empty() {
-            info!("query completion start");
+        let similar_sections = self.get_similar_sections(&query_embedding).await?;
+        info!(
+            "2) get similar sections:{:?}, cost:{:?}",
+            similar_sections,
+            now.elapsed().as_secs()
+        );
+
+        // 3. Get the sections completion.
+        if similar_sections.is_empty() {
             let sections_text = similar_sections.to_vec().join(" ");
             let mut sections_text = remove_markdown_links(&sections_text);
-
             let prompt = self.prompt_template.clone();
-
             // Keep the section is no larger.
             {
                 let template_len = prompt.len();
@@ -130,26 +183,22 @@ impl DatabendDriver {
 
             let prompt = prompt.replace("{{context}}", &sections_text);
             let prompt = prompt.replace("{{query}}", query);
-            let prompt_sql = format!(
-                "SELECT ai_text_completion('{}') as q",
-                &escape_sql_string(&prompt)
+
+            let now = Instant::now();
+            let context_completion = self.get_completion(&prompt).await?;
+            info!(
+                "3) get context completion, query:{}\n prompt:{:?}\n, completion:{:?}\ncost:{:?}",
+                query,
+                prompt,
+                similar_sections,
+                now.elapsed().as_secs()
             );
-            info!("prompt sql:{}", prompt_sql);
-            info!("query is: {}", query);
 
-            type TextCompletionResult = (String,);
-            let mut text_completions = vec![];
-            let mut rows = self.conn.query_iter(&prompt_sql).await?;
-            while let Some(row) = rows.next().await {
-                let text_completion: TextCompletionResult = row?.try_into()?;
-                info!("prompt completion:{}", text_completion.0);
-                text_completions.push(text_completion.0);
-            }
+            self.insert_answer(query, &context_completion).await?;
 
-            info!("query completion end, cost:{:?}", now.elapsed().as_secs());
-            return Ok(text_completions);
+            Ok(vec![context_completion])
+        } else {
+            Ok(vec![])
         }
-
-        Ok(vec![])
     }
 }
