@@ -28,4 +28,10 @@
       opacity: .5;
     }
   }
+  @include media {
+   .copy{
+    pointer-events: all;
+    opacity: 0.7;
+   }
+  }
 }

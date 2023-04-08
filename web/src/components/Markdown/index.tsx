@@ -7,6 +7,7 @@ import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 import RightSvg from '@/assets/svg/right';
 import styles from './styles.module.scss';
+import { deviceType } from '@/utils/device-type';
 
 type tProps = {
   textContent: string
@@ -14,6 +15,7 @@ type tProps = {
 const AskDatabendMarkdown = (props: tProps) => {
   const { textContent } = props;
   const [isCopy, setIsCopy] = useState(false);
+  const { isPhone } = deviceType();
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -42,7 +44,7 @@ const AskDatabendMarkdown = (props: tProps) => {
                 }}
               >
                 {
-                  isCopy
+                  (isCopy && !isPhone)
                     ? <RightSvg />
                     : <>Copy</>
                 }
