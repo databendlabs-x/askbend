@@ -1,30 +1,53 @@
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import copy from 'copy-to-clipboard';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 // cb coldarkDark okaidia tomorrow xonokai darcula
 import { okaidia } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
+import RightSvg from '@/assets/svg/right';
+import styles from './styles.module.scss';
 
 type tProps = {
   textContent: string
 }
 const AskDatabendMarkdown = (props: tProps) => {
   const { textContent } = props;
+  const [isCopy, setIsCopy] = useState(false);
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ node, inline, className, children, ...props }) {
+        code({ inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
+          const text =  String(children).replace(/\n$/, '');
           return !inline && match ? (
-            <SyntaxHighlighter
-              showLineNumbers={true}
-              style={okaidia as any}
-              language={match[1]}
-              PreTag='div'
-              {...props}
-            >
-              {String(children).replace(/\n$/, '')}
-            </SyntaxHighlighter>
+            <div 
+              onMouseLeave={()=> setIsCopy(false)}
+              className={styles.codeWrap}>
+              <SyntaxHighlighter
+                showLineNumbers={true}
+                style={okaidia as any}
+                language={match[1]}
+                PreTag='div'
+                {...props}
+              >
+                {text}
+              </SyntaxHighlighter>
+              <span
+                className={styles.copy}
+                onClick={() => {
+                  copy(text);
+                  setIsCopy(true);
+                }}
+              >
+                {
+                  isCopy
+                    ? <RightSvg />
+                    : <>Copy</>
+                }
+              </span>
+            </div>
           ) : (
             <code className={className} {...props}>
               {children}
