@@ -1,4 +1,5 @@
 # AskBend: SQL-based Knowledge Base Search and Completion using Databend
+## Demo https://ask.databend.rs/
 
 AskBend is a Rust project that utilizes the power of Databend and OpenAI to create a SQL-based knowledge base from Markdown files.
 
