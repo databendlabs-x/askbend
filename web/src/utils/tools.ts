@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { useHotkeys } from 'react-hotkeys-hook';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import isYesterday from 'dayjs/plugin/isYesterday';
+import { useMemo } from 'react';
 dayjs.extend(relativeTime);
 dayjs.extend(isYesterday);
 
@@ -28,4 +29,17 @@ export function scrollToTop() {
 // fortmat number
 export function numberFormat(num: number): string | number {
   return num < 1000 ? num : (num / 1000).toFixed(1) + 'K';
+}
+export function useQuery() {
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const result: any = {};
+  for (const [key, value] of params.entries()) {
+    result[key] = value;
+  }
+  return result;
+}
+// get query
+export function getQuery(key: string) {
+  return useQuery()[key];
 }

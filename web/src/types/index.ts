@@ -12,4 +12,5 @@ export type tResultsItem = {
   value: string;
   date?: number | string;
   isRegenerate?: boolean;
+  question?: string;
 }
