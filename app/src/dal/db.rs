@@ -30,6 +30,7 @@ pub struct DatabendDriver {
     pub min_content_length: usize,
     pub max_content_length: usize,
     pub top: usize,
+    pub min_distance: f32,
     pub prompt_template: String,
     pub conn: DatabendConnection,
 }
@@ -44,6 +45,7 @@ impl DatabendDriver {
             min_content_length: conf.query.min_content_length,
             max_content_length: conf.query.max_content_length,
             top: conf.query.top,
+            min_distance: conf.query.min_distance.parse::<f32>().unwrap_or(0.28),
             prompt_template: conf.query.prompt.to_string(),
             conn,
         })
@@ -131,12 +133,13 @@ impl DatabendDriver {
         let mut similar_distances = vec![];
 
         let sql = format!(
-            "SELECT content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} ORDER BY distance ASC LIMIT {}",
+            "SELECT content, distance FROM (SELECT content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} ORDER BY distance ASC LIMIT {}) WHERE distance <={}",
             query_embedding,
             self.database,
             self.table,
             self.min_content_length,
-            self.top
+            self.top,
+            self.min_distance
         );
 
         type RowResult = (String, f32);
