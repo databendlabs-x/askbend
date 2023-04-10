@@ -9,7 +9,7 @@ interface IProps {
 const ProductName: FC<IProps> = ({showSponser}): ReactElement=> {
   const { isSwitch } =  useGetScrollInfo();
   function refresh() {
-    window.location.reload();
+    window.location.href= '/';
   }
   return (
     <div 
