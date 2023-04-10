@@ -31,9 +31,9 @@ const Result: FC = (): ReactElement=> {
           resultsList?.length>0 && 
           <div className={styles.list}>
             {
-              resultsList?.map((res: tResultsItem,index: number)=> {
+              resultsList?.map((res: tResultsItem, index: number)=> {
                 if (index ==0) {
-                  return  <ResultCard key={index} isFirst value={res.value}/>;
+                  return  <ResultCard key={index} isFirst value={res.value} question={res?.question}/>;
                 } else {
                   return  <ResultHistoryCard key={index} date={res.date} value={res.value}/>;
                 }
@@ -41,7 +41,6 @@ const Result: FC = (): ReactElement=> {
             }
           </div>
         }
-        
       </div>
     </>
    

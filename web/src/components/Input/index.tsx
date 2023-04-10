@@ -11,7 +11,7 @@ import { KEY_CODE } from '@/assets/constant';
 import { useGetResultsState } from '@/state/hooks/useGetResultsState';
 import useGetScrollInfo from '@/hooks/useGetScrollInfo';
 import clsx from 'clsx';
-import { scrollToTop } from '@/utils/tools';
+import { getQuery, scrollToTop } from '@/utils/tools';
 import { getAnswers } from '@/api';
 import { Tooltip } from 'antd';
 import Examples from './examples';
@@ -19,14 +19,21 @@ import { deviceType } from '@/utils/device-type';
 import CountLength from './count-length';
 const QuestionInput: FC = (): ReactElement=> {
   const TEXTAREA_ID = 'question-input';
+  const q = getQuery('q') || '';
   const { isPhone } = deviceType();
   const { isSwitch } =  useGetScrollInfo();
   const { dispatchUpdateResultList, dispatchIsFetching, dispatchShowErrorTip, dispatchSetInputQuestion, dispatchSetPreQuestion } =  useResultsDispatch();
-  const [queryText, setQueryText] = useSafeState('');
+  const [queryText, setQueryText] = useSafeState(q);
   const { isFeatching, preQuestion } = useGetResultsState();
   const [isRegenerate, setIsRegenerate] = useState(false);
   const [openExample, setOpenExample] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useMount(()=> {
+    if (q) {
+      dispatchSetInputQuestion(q);
+      getResults(false, q);
+    }
+  });
   useEffect(()=>{
     window.addEventListener('keydown', onKeyDown);
     return ()=>{
@@ -66,10 +73,11 @@ const QuestionInput: FC = (): ReactElement=> {
     dispatchShowErrorTip(false);
     setOpenExample(false);
     try{
+      const q = preQuestion ? preQuestion : queryText;
       const data = await getAnswers(preQuestion ? preQuestion : queryText);
       if ([200, 201]?.includes(data?.status )) {
         const res = data?.data?.result;
-        dispatchUpdateResultList({value: res, isRegenerate});
+        dispatchUpdateResultList({value: res, isRegenerate, question: q});
       } else {
         dispatchShowErrorTip(true);
       }

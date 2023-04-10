@@ -5,11 +5,13 @@ import Card from 'components/Card';
 import Typed from 'react-typed';
 import { useSafeState, useInterval, useUnmount, useMount } from 'ahooks';
 import { useGetResultsState } from '@/state/hooks/useGetResultsState';
+import { getQuery } from '@/utils/tools';
 const WaitCard: FC = (): ReactElement=> {
   const { isFeatching, preQuestion, inputQuestion } = useGetResultsState();
   const [typeSpeed, setTypeSpeed] = useSafeState(50);
   const [interval, setInterval] = useSafeState<number | undefined>(undefined);
   const [question, setQuestion] = useSafeState('');
+  const q = getQuery('q') || '';
   useInterval(()=> {
     const randomNumber = Math.floor(Math.random() * 50) + 20;
     setTypeSpeed(randomNumber);
@@ -38,7 +40,7 @@ const WaitCard: FC = (): ReactElement=> {
         className={styles.typed}
         loop={false}
         strings={[`
-          <span class="type-line-question">You seem curious about: ${question}</span></br><span class="type-line-two">AI is in the process of organizing the answers for you, which may take some time.</span>
+          <span class="type-line-question">You seem curious about: ${question || q}</span></br><span class="type-line-two">AI is in the process of organizing the answers for you, which may take some time.</span>
         `]}
         typeSpeed={typeSpeed}
       ></Typed>
