@@ -18,7 +18,7 @@ const Result: FC = (): ReactElement=> {
       {
         showErrorTip && <ErrorTip />
       }
-      <div className={styles.resultArea} style={{paddingTop: isSwitch ? `${document.getElementById('askbend_top_banner')?.offsetHeight}px`:'unset'}}>
+      <div className={styles.resultArea} style={{paddingTop: isSwitch ? `${document.getElementById('askbend_top_banner')?.offsetHeight??0 - 12}px`:'unset'}}>
         {
           isFeatching  && <WaitCard />
         }
