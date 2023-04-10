@@ -8,9 +8,16 @@ interface IProps {
 }
 const ProductName: FC<IProps> = ({showSponser}): ReactElement=> {
   const { isSwitch } =  useGetScrollInfo();
+  function refresh() {
+    window.location.reload();
+  }
   return (
-    <div className={clsx(styles.wrap, isSwitch && styles.wrapOtherView)}>
-      <div className={styles.product}>
+    <div 
+      onClick={(e)=> {
+        e.stopPropagation();
+      } }
+      className={clsx(styles.wrap, isSwitch && styles.wrapOtherView)}>
+      <div className={styles.product} onClick={()=> refresh()}>
         <span>Ask</span><span className={styles.bend}>Bend</span>
       </div>
       {

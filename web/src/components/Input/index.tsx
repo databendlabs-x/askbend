@@ -37,12 +37,6 @@ const QuestionInput: FC = (): ReactElement=> {
     if (textareaRef.current) {
       autoResize();
     }
-    document.body.onscroll=()=> {
-      setOpenExample(false);
-    };
-    return ()=> {
-      document.body.onscroll = null;
-    };
   }, []);
   useEffect(()=> {
     autoResize();
@@ -109,9 +103,9 @@ const QuestionInput: FC = (): ReactElement=> {
     <Tooltip
       placement='bottom'
       arrow={false}
-      open={isPhone ? false : openExample}
+      open={openExample}
       overlayStyle={{
-        width: isSwitch?'557px':'760px',
+        width: isPhone ? '96%' : (isSwitch ? '557px' : '760px'),
         padding: '0',
         background: 'rgba(0,3,10,1.00)',
         borderRadius: '6px',

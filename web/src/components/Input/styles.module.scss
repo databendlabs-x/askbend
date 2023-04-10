@@ -124,14 +124,28 @@
   .list {
     margin-top: 6px;
     padding-bottom: 6px;
+    max-height: 400px;
+    overflow-y: auto;
     .item {
-      height: 44px;
-      line-height: 44px;
+      height: 34px;
+      line-height: 34px;
       border-radius: 6px;
       cursor: pointer;
       padding-left: 12px;
       &:hover {
         background-color: rgba(50,50,50,.8);
+      }
+    }
+  }
+  @include media {
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0;
+      .item {
+        height: auto;
+        line-height: 20px;
       }
     }
   }
