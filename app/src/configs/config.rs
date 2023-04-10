@@ -141,6 +141,9 @@ pub struct QueryConfig {
     #[clap(long = "top", default_value_t = 2)]
     pub top: usize,
 
+    #[clap(long = "min_distance", default_value_t)]
+    pub min_distance: String,
+
     #[clap(long = "prompt", default_value_t)]
     pub prompt: String,
 }
@@ -151,6 +154,7 @@ impl Default for QueryConfig {
             min_content_length: 50,
             max_content_length: 8000,
             top: 2,
+            min_distance: "".to_string(),
             prompt: "".to_string(),
         }
     }
