@@ -14,7 +14,7 @@ interface IProps{
 }
 const ResultCard: FC<IProps> = ({isFirst, value, question}): ReactElement=> {
   function shareWithOthers() {
-    copy(`https://ask.databend.rs/?q=${encodeURIComponent(question)}`);
+    copy(`https://ask.databend.rs/?q=${encodeURIComponent(question as string)}`);
     notification.open({
       message: 'Tips',
       duration: 1.5,
