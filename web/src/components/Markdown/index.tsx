@@ -23,14 +23,15 @@ const AskDatabendMarkdown = (props: tProps) => {
         code({ inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           const text =  String(children).replace(/\n$/, '');
-          return !inline && match ? (
+          const language = match ? match[1] : 'sql';
+          return !inline && language ? (
             <div 
               onMouseLeave={()=> setIsCopy(false)}
               className={styles.codeWrap}>
               <SyntaxHighlighter
                 showLineNumbers={true}
                 style={okaidia as any}
-                language={match[1]}
+                language={language}
                 PreTag='div'
                 {...props}
               >
@@ -64,7 +65,7 @@ const AskDatabendMarkdown = (props: tProps) => {
               title={desc} 
               rel="noopener noreferrer" 
               href={props?.href}>
-              {props?.children[0]}
+              {desc}
             </a>
           );
         },
