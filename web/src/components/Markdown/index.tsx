@@ -65,7 +65,7 @@ const AskDatabendMarkdown = (props: tProps) => {
               title={desc} 
               rel="noopener noreferrer" 
               href={props?.href}>
-              {props?.children[0]}
+              {desc}
             </a>
           );
         },
