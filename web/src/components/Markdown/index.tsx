@@ -53,7 +53,7 @@ const AskDatabendMarkdown = (props: tProps) => {
             </div>
           ) : (
             <code className={className} {...props}>
-              {text}
+              {children}
             </code>
           );
         },
