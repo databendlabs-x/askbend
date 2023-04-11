@@ -67,7 +67,12 @@ const AskDatabendMarkdown = (props: tProps) => {
               {props?.children[0]}
             </a>
           );
-        }
+        },
+        table: ({...props}) => (
+          <div style={{overflowX: 'auto', width: '100%'}}>
+            <table {...props} />
+          </div>
+        )
       }}
     >
       {textContent}

@@ -29,6 +29,49 @@
   @include media {
     padding: 15px!important;
   }
+  table {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    border-spacing: 0px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    font-size: .875em;
+    color: var(--color-text-0);
+    width: 100%;
+    tr {
+      border-bottom: 1px solid var(--color-border);
+      td{
+        color: #374151;
+        padding: 0.25rem 0.75rem;
+        vertical-align: baseline;
+        border-bottom: 1px solid var(--color-border);
+        border-left: 1px solid var(--color-border);
+        &:first-child{
+          border-left: unset;
+        }
+      }
+      &:last-child{
+        td {
+          border-bottom: unset;
+        }
+      }
+      th{
+        font-weight: 600;
+        background-color: rgba(236,236,241,.2);
+        text-align: left;
+        border-left: 1px solid var(--color-border);
+        padding: 0.25rem 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+        &:first-child{
+          border-left: unset;
+        }
+      }
+    }
+  }
+  a {
+    word-wrap: break-word;
+  }
 }
 .successTips {
   color: var(-color-text-0);
