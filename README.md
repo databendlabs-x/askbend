@@ -148,10 +148,9 @@ The result field is an array of strings. However, we only need to consider the f
 
 The API assumes that if the query was successful, the first item in the result array is the most relevant answer.
 
-### How to open the UI
+## How to open the UI
 
-First, make sure you have installed Node and the Yarn/npm package manager.
-If you are in local development mode, follow these steps:
+To open the UI, you need to make sure that you have installed `Node` and the `Yarn/npm` package manager. Once you have confirmed this, you can proceed with the following steps:
 
 ```js
 cd web
