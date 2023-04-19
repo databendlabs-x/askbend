@@ -147,3 +147,21 @@ On successful query execution, the API will return a 200 OK status code, along w
 The result field is an array of strings. However, we only need to consider the first string in the array as the final result. 
 
 The API assumes that if the query was successful, the first item in the result array is the most relevant answer.
+
+### How to open the UI
+
+First, make sure you have installed Node and the Yarn/npm package manager.
+If you are in local development mode, follow these steps:
+
+```js
+cd web
+yarn
+yarn run dev (or npm run dev)
+```
+
+If you want to expose your host:
+
+```js
+yarn run dev-host (or npm run dev-host)
+```
+

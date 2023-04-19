@@ -6,6 +6,7 @@
   "scripts": {
     "repoInfo": "node fetch-repo-info.js",
     "dev": "npm run repoInfo && vite",
+    "dev-host": "npm run repoInfo && vite --host",
     "build": "npm run repoInfo && tsc && vite build --mode production",
     "preview": "vite preview"
   },
