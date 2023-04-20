@@ -76,8 +76,9 @@ port = 8081
 
 [query]
 top = 3
+product = "YourProductName"
 prompt = '''
-<your prompt> ... 
+<your prompt including {{product}}> ... 
 Documentation sections:
 {{context}}
 
