@@ -15,6 +15,7 @@ test = false
 
 [dependencies]
 clap = { version = "4.1.7", features = ["derive", "env"] }
+chrono = "0.4.24"
 comrak = "0.18.0"
 databend-driver = "0.1.4"
 log = "0.4.0"
