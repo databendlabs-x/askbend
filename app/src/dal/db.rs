@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use anyhow::Result;
+use chrono::{DateTime, Utc};
 use databend_driver::DatabendConnection;
 use log::info;
 use tokio::time::Instant;
@@ -26,11 +27,12 @@ use crate::{remove_markdown_links, Config};
 pub struct DatabendDriver {
     pub database: String,
     pub table: String,
-    pub anwser_table: String,
+    pub answer_table: String,
     pub min_content_length: usize,
     pub max_content_length: usize,
     pub top: usize,
     pub min_distance: f32,
+    pub product: String,
     pub prompt_template: String,
     pub conn: DatabendConnection,
 }
@@ -41,11 +43,12 @@ impl DatabendDriver {
         Ok(DatabendDriver {
             database: conf.database.database.clone(),
             table: conf.database.table.clone(),
-            anwser_table: conf.database.answer_table.clone(),
+            answer_table: conf.database.answer_table.clone(),
             min_content_length: conf.query.min_content_length,
             max_content_length: conf.query.max_content_length,
             top: conf.query.top,
             min_distance: conf.query.min_distance.parse::<f32>().unwrap_or(0.28),
+            product: conf.query.product.to_string(),
             prompt_template: conf.query.prompt.to_string(),
             conn,
         })
@@ -82,19 +85,22 @@ impl DatabendDriver {
         similar_sections: &str,
         answer: &str,
     ) -> Result<()> {
-        if self.anwser_table.is_empty() {
+        if self.answer_table.is_empty() {
             return Ok(());
         }
 
+        let now: DateTime<Utc> = Utc::now();
+        let now_str = now.format("%Y-%m-%d %H:%M:%S").to_string();
         let sql = format!(
-            "INSERT INTO {}.{} (question, prompt, similar_distances, similar_sections, answer) VALUES ('{}','{}', {:?}, '{}', '{}')",
+            "INSERT INTO {}.{} (question, prompt, similar_distances, similar_sections, answer, ts) VALUES ('{}','{}', {:?}, '{}', '{}', '{}')",
             self.database,
-            self.anwser_table,
+            self.answer_table,
             escape_sql_string(query),
             escape_sql_string(prompt),
             similar_distances,
             escape_sql_string(similar_sections),
-            escape_sql_string(answer)
+            escape_sql_string(answer),
+            now_str,
         );
         self.conn.exec(&sql).await
     }
@@ -206,6 +212,7 @@ impl DatabendDriver {
 
             prompt = prompt.replace("{{context}}", &sections_text);
             prompt = prompt.replace("{{query}}", query);
+            prompt = prompt.replace("{{product}}", &self.product);
 
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
