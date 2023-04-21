@@ -1,0 +1,45 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_linux:
+    name: build ${{ matrix.target }}
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl
+          - aarch64-unknown-linux-musl
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+        targets: ${{ matrix.target }}
+    - name: Setup Cross
+      shell: bash
+      run: |
+        curl -sSfLo /tmp/cross.tar.gz https://github.com/cross-rs/cross/releases/download/v0.2.5/cross-x86_64-unknown-linux-gnu.tar.gz
+        tar -xzf /tmp/cross.tar.gz -C /tmp
+        sudo mv /tmp/cross /usr/local/bin/cross
+    - name: Build
+      shell: bash
+      run: |
+        cross build --release --target=${{ matrix.target }} --bin=askbend
+    - name: Publish
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p dist/${{ matrix.target }}
+        mv target/${{ matrix.target }}/release/askbend dist/${{ matrix.target }}/askbend
+        cp conf/askbend.toml dist/${{ matrix.target }}/askbend.toml
+        cp schema/table.sql dist/${{ matrix.target }}/table.sql
+        cp README.md dist/${{ matrix.target }}/README.md
+        cp LICENSE dist/${{ matrix.target }}/LICENSE
+        tar -czf dist/askbend-${{ matrix.target }}.tar.gz -C dist ${{ matrix.target }}
+        gh release upload ${{ github.ref_name }} dist/askbend-${{ matrix.target }}.tar.gz --clobber
