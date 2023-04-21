@@ -29,21 +29,11 @@ The project follows this general process:
 
 ## Setup
 
-### 1. Clone the repository
+### 1. Download 
 
-```
-git clone https://github.com/datafuselabs/askbend
-cd askbend
-```
+https://github.com/datafuselabs/askbend/releases
 
-### 2. Build the project
-
-```
-make setup
-make build
-```
-
-### 3. Create a database in your Databend Cloud
+### 2. Create a table in your Databend Cloud
 
 [table](schema/table.sql):
 ```
@@ -53,7 +43,7 @@ USE askbend;
 CREATE TABLE doc (path VARCHAR, content VARCHAR, embedding ARRAY(FLOAT32));
 ```
 
-### 4. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
+### 3. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
 
 ```
 # Usage:
@@ -87,9 +77,9 @@ Question:
 '''
 ```
 
-### 5. Prepare your Markdown files by copying them to the data/ directory
+### 4. Prepare your Markdown files by copying them to the `data/` directory
 
-### 6. Parse the Markdown files and build embeddings
+### 5. Parse the Markdown files and build embeddings
 
 ```
 ./target/release/askbend -c conf/askbend.toml --rebuild
@@ -106,13 +96,13 @@ Question:
 The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files.
 
 
-### 7. Start the API server
+### 6. Start the API server
 
 ```
 ./target/release/askbend -c conf/askbend.toml
 ```
 
-### 8. Query your Markdown knowledge base using the API
+### 7. Query your Markdown knowledge base using the API
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/query
 ```
