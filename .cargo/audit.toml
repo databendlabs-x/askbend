@@ -18,5 +18,8 @@ ignore = [
     "RUSTSEC-2021-0139",
     # buf_redux
     # buf_redux is Unmaintained
-    "RUSTSEC-2023-0028"
+    "RUSTSEC-2023-0028",
+     #h2
+     #https://rustsec.org/advisories/RUSTSEC-2023-0034
+    "RUSTSEC-2023-0034"
 ]
