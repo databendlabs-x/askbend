@@ -244,6 +244,10 @@ impl DatabendDriver {
             now.elapsed().as_secs()
         );
 
-        Ok(vec![completion])
+        if completion.is_empty() {
+            Ok(vec![])
+        } else {
+            Ok(vec![completion])
+        }
     }
 }
