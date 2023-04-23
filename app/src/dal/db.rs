@@ -23,6 +23,9 @@ use crate::base::escape_sql_string;
 use crate::SnippetFiles;
 use crate::{remove_markdown_links, Config};
 
+// Max completion tokens.
+const MAX_COMPLETION_LENGHT: usize = 8000;
+
 #[derive(Clone)]
 pub struct DatabendDriver {
     pub database: String,
@@ -207,20 +210,21 @@ impl DatabendDriver {
             // Keep the section is no larger.
             {
                 let template_len = prompt.len();
-                sections_text.truncate(8192 - template_len);
+                sections_text.truncate(MAX_COMPLETION_LENGHT - template_len);
             }
 
             prompt = prompt.replace("{{context}}", &sections_text);
             prompt = prompt.replace("{{query}}", query);
             prompt = prompt.replace("{{product}}", &self.product);
 
+            info!("prepare completion prompt: {}", prompt);
+            info!("prepare completion query: {}", query);
+
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
-            info!("get completion, query=[{}], prompt=[{:?}]", query, prompt,);
             info!(
-                "get completion, query=[{}], completion={:?}, cost={:?}",
-                query,
-                similar_sections,
+                "get completion, completion={:?}, cost={:?}",
+                context_completion,
                 now.elapsed().as_secs()
             );
 
