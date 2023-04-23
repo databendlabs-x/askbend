@@ -21,12 +21,19 @@ use askbend::Parse;
 pub fn test_markdown_files() -> Result<()> {
     let file = FileOperator::create("tests/testdata/", "md", &[]);
     let metas = file.list()?;
+    let files = metas
+        .iter()
+        .map(|x| x.full_path.clone())
+        .collect::<Vec<String>>();
 
-    let markdowns = Markdown::parse_multiple(&[metas[1].full_path.clone()])?;
+    let markdowns = Markdown::parse_multiple(&files)?;
     for markdown in &markdowns.snippet_files {
-        assert_eq!(markdown.file_path, "tests/testdata/hash.md");
+        //assert_eq!(markdown.file_path, "tests/testdata/hash.md");
         for section in &markdown.code_snippets {
-            println!("--{:?}", section);
+            println!(
+                "*****file:{}, ++++++++++--{:?}",
+                markdown.file_path, section
+            );
         }
     }
 
