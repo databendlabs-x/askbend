@@ -22,9 +22,9 @@ pub fn test_markdown_files() -> Result<()> {
     let file = FileOperator::create("tests/testdata/", "md", &[]);
     let metas = file.list()?;
 
-    let markdowns = Markdown::parse_multiple(&[metas[0].full_path.clone()])?;
+    let markdowns = Markdown::parse_multiple(&[metas[1].full_path.clone()])?;
     for markdown in &markdowns.snippet_files {
-        assert_eq!(markdown.file_path, "tests/testdata/1.md");
+        assert_eq!(markdown.file_path, "tests/testdata/hash.md");
         for section in &markdown.code_snippets {
             println!("--{:?}", section);
         }

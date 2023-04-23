@@ -16,14 +16,13 @@ use std::fs;
 
 use anyhow::Result;
 use comrak::format_commonmark;
-use comrak::nodes::NodeValue;
 use comrak::parse_document;
 use comrak::Arena;
 use comrak::ComrakOptions;
 
-use crate::Parse;
 use crate::SnippetFile;
 use crate::SnippetFiles;
+use crate::{replace_multiple_spaces, LengthWithoutSymbols, Parse};
 
 pub struct Markdown;
 
@@ -39,19 +38,11 @@ impl Parse for Markdown {
         let mut current_section = String::new();
 
         for node in root.children() {
-            match node.data.borrow().value {
-                NodeValue::Heading(_) => {
-                    if !current_section.is_empty() {
-                        sections.push(current_section);
-                        current_section = String::new();
-                    }
-                }
-                _ => {
-                    let mut section_text = vec![];
-                    format_commonmark(node, &ComrakOptions::default(), &mut section_text).unwrap();
-                    current_section.push_str(std::str::from_utf8(&section_text).unwrap());
-                }
-            }
+            let mut section_text = vec![];
+            format_commonmark(node, &ComrakOptions::default(), &mut section_text).unwrap();
+            let current_section_transformer =
+                replace_multiple_spaces(std::str::from_utf8(&section_text).unwrap());
+            current_section.push_str(&current_section_transformer);
         }
 
         if !current_section.is_empty() {
@@ -63,7 +54,9 @@ impl Parse for Markdown {
         let mut prev_section = String::new();
 
         for section in sections {
-            if (prev_section.len() + section.len()) < min_section_len {
+            if (prev_section.length_without_symbols() + section.length_without_symbols())
+                < min_section_len
+            {
                 prev_section.push_str(&section);
             } else {
                 if !prev_section.is_empty() {
