@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use actix_cors::Cors;
+use actix_web::http;
 use actix_web::web;
 use actix_web::App;
 use actix_web::HttpServer;
@@ -43,7 +44,14 @@ impl APIHandler {
         let data = self.db.clone();
 
         HttpServer::new(move || {
-            let mut cors = Cors::default();
+            let mut cors = Cors::default()
+                .allowed_methods(vec!["GET", "POST"])
+                .allowed_headers(vec![
+                    http::header::AUTHORIZATION,
+                    http::header::ACCEPT,
+                    http::header::CONTENT_TYPE,
+                ])
+                .max_age(3600);
             for origin in &conf.cors {
                 cors = cors.allowed_origin(origin);
             }
