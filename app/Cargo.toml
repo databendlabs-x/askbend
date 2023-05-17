@@ -24,6 +24,7 @@ regex = "1.7.3"
 serde = { version = "1.0.159", features = ["derive"] }
 serfig = "0.0.3"
 actix-web = "4.3.1"
+actix-cors = "0.6.4"
 anyhow = "1.0.58"
 syn = "1.0"
 proc-macro2 = "1.0"

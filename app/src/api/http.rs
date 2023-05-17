@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use actix_cors::Cors;
 use actix_web::web;
 use actix_web::App;
 use actix_web::HttpServer;
@@ -42,7 +43,12 @@ impl APIHandler {
         let data = self.db.clone();
 
         HttpServer::new(move || {
+            let mut cors = Cors::default();
+            for origin in &conf.cors {
+                cors = cors.allowed_origin(origin);
+            }
             App::new()
+                .wrap(cors)
                 .app_data(web::Data::new(data.clone()))
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
