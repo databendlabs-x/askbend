@@ -144,8 +144,13 @@ impl DatabendDriver {
         let mut similar_distances = vec![];
 
         let sql = format!(
-            "SELECT path, content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND distance <= {} ORDER BY distance ASC LIMIT {}",
-            query_embedding, self.database, self.table, self.min_distance, self.top,
+            "SELECT path, content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} AND distance <= {} ORDER BY distance ASC LIMIT {}",
+            query_embedding,
+            self.database,
+            self.table,
+            self.min_content_length,
+            self.min_distance,
+            self.top,
         );
 
         type RowResult = (String, String, f32);
@@ -153,8 +158,8 @@ impl DatabendDriver {
         while let Some(row) = rows.next().await {
             let section_tuple: RowResult = row?.try_into()?;
             similar_sections.push(format!(
-                "Content:{}\nSource:{}\n",
-                section_tuple.0, section_tuple.1
+                "\nContent: {}\nSource: {}",
+                section_tuple.1, section_tuple.0
             ));
             similar_distances.push(section_tuple.2);
         }
