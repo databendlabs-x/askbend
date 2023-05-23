@@ -144,7 +144,7 @@ impl DatabendDriver {
         let mut similar_distances = vec![];
 
         let sql = format!(
-            "SELECT path content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND distance <= {} ORDER BY distance ASC LIMIT {}",
+            "SELECT path, content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND distance <= {} ORDER BY distance ASC LIMIT {}",
             query_embedding, self.database, self.table, self.min_distance, self.top,
         );
 
