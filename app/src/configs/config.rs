@@ -117,6 +117,8 @@ pub struct ServerConfig {
     #[clap(long = "port", default_value_t)]
     pub port: usize,
 
+    pub cors: Vec<String>,
+
     #[clap(long = "rebuild", default_value_t)]
     pub rebuild: bool,
 }
@@ -126,6 +128,7 @@ impl Default for ServerConfig {
         ServerConfig {
             host: "".to_string(),
             port: 0,
+            cors: Vec::new(),
             rebuild: false,
         }
     }

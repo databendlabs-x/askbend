@@ -167,7 +167,7 @@ impl DatabendDriver {
     /// update the table embedding
     pub async fn embedding(&self) -> Result<()> {
         let sql = format!(
-            "UPDATE {}.{} SET embedding = ai_embedding_vector(left(content,{})) WHERE length(embedding)=0",
+            "UPDATE {}.{} SET embedding = ai_embedding_vector(left(concat(path, content),{})) WHERE length(embedding)=0",
             self.database, self.table, self.max_content_length,
         );
 
@@ -218,7 +218,6 @@ impl DatabendDriver {
             prompt = prompt.replace("{{product}}", &self.product);
 
             info!("prepare completion prompt: {}", prompt);
-            info!("prepare completion query: {}", query);
 
             let now = Instant::now();
             let context_completion = self.get_completion(&prompt).await?;
