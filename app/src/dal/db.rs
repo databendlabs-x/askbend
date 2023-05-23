@@ -13,15 +13,17 @@
 // limitations under the License.
 
 use anyhow::Result;
-use chrono::{DateTime, Utc};
+use chrono::DateTime;
+use chrono::Utc;
 use databend_driver::DatabendConnection;
 use log::info;
 use tokio::time::Instant;
 use tokio_stream::StreamExt;
 
 use crate::base::escape_sql_string;
+use crate::remove_markdown_links;
+use crate::Config;
 use crate::SnippetFiles;
-use crate::{remove_markdown_links, Config};
 
 // Max completion tokens.
 const MAX_COMPLETION_LENGHT: usize = 8000;
@@ -142,21 +144,24 @@ impl DatabendDriver {
         let mut similar_distances = vec![];
 
         let sql = format!(
-            "SELECT content, distance FROM (SELECT content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} ORDER BY distance ASC LIMIT {}) WHERE distance <={}",
+            "SELECT path, content, cosine_distance({}, embedding) AS distance FROM {}.{} WHERE length(embedding) > 0 AND length(content)>{} AND distance <= {} ORDER BY distance ASC LIMIT {}",
             query_embedding,
             self.database,
             self.table,
             self.min_content_length,
+            self.min_distance,
             self.top,
-            self.min_distance
         );
 
-        type RowResult = (String, f32);
+        type RowResult = (String, String, f32);
         let mut rows = self.conn.query_iter(&sql).await?;
         while let Some(row) = rows.next().await {
             let section_tuple: RowResult = row?.try_into()?;
-            similar_sections.push(section_tuple.0);
-            similar_distances.push(section_tuple.1);
+            similar_sections.push(format!(
+                "\nContent: {}\nSource: {}",
+                section_tuple.1, section_tuple.0
+            ));
+            similar_distances.push(section_tuple.2);
         }
         Ok((similar_sections, similar_distances))
     }

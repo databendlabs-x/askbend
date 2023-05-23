@@ -28,7 +28,7 @@ pub fn test_markdown_files() -> Result<()> {
 
     let markdowns = Markdown::parse_multiple(&files)?;
     for markdown in &markdowns.snippet_files {
-        //assert_eq!(markdown.file_path, "tests/testdata/hash.md");
+        // assert_eq!(markdown.file_path, "tests/testdata/hash.md");
         for section in &markdown.code_snippets {
             println!(
                 "*****file:{}, ++++++++++--{:?}",

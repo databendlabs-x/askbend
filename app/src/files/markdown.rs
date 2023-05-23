@@ -21,9 +21,10 @@ use comrak::parse_document;
 use comrak::Arena;
 use comrak::ComrakOptions;
 
+use crate::replace_multiple_spaces;
 use crate::Parse;
+use crate::SnippetFile;
 use crate::SnippetFiles;
-use crate::{replace_multiple_spaces, SnippetFile};
 
 pub struct Markdown;
 

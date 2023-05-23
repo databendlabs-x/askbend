@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use askbend::{remove_markdown_links, replace_multiple_spaces, LengthWithoutSymbols};
+use askbend::remove_markdown_links;
+use askbend::replace_multiple_spaces;
+use askbend::LengthWithoutSymbols;
 
 #[test]
 fn test_remove_markdown_links() {
