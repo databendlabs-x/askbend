@@ -21,6 +21,9 @@ export default defineConfig({
       '/query': {
         target: 'https://ask.databend.rs',
         changeOrigin: true,
+        headers: {
+          'Origin': 'https://ask.databend.rs'
+        }
       }
     }
   },
