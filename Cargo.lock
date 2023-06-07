@@ -1880,7 +1880,7 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 [[package]]
 name = "llmchain"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "llmchain-embeddings",
  "llmchain-llms",
@@ -1892,12 +1892,12 @@ dependencies = [
 [[package]]
 name = "llmchain-common"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 
 [[package]]
 name = "llmchain-embeddings"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1909,7 +1909,7 @@ dependencies = [
 [[package]]
 name = "llmchain-llms"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "anyhow",
  "async-openai",
@@ -1925,7 +1925,7 @@ dependencies = [
 [[package]]
 name = "llmchain-loaders"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1942,7 +1942,7 @@ dependencies = [
 [[package]]
 name = "llmchain-prompts"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "anyhow",
 ]
@@ -1950,7 +1950,7 @@ dependencies = [
 [[package]]
 name = "llmchain-vector-stores"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=5cd631f#5cd631f01aff09e713d76a11c8bb0b243550d246"
+source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1959,6 +1959,7 @@ dependencies = [
  "llmchain-common",
  "llmchain-embeddings",
  "llmchain-loaders",
+ "log",
  "tokio",
  "uuid",
 ]

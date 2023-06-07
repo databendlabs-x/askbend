@@ -1,31 +1,8 @@
-# AskBend: SQL-based Knowledge Base Search and Completion using Databend
+# AskBend: Empower developers to explore & implement your knowledge base
+
 ## Demo https://ask.databend.rs/
 
-AskBend is a Rust project that utilizes the power of Databend and OpenAI to create a SQL-based knowledge base from Markdown files.
-
-Databend is a cloud-native data warehouse adept at storing and performing vector computations, making it suitable for this use case.
-
-[Databend Cloud](https://databend.com) seamlessly integrates with OpenAI's capabilities, such as embedding generation, cosine distance calculation, and text completion. This integration means you don't need to interact with OpenAI directly; Databend Cloud manages everything.
-
-The project automatically generates document embeddings from the content, enabling users to search and retrieve the most relevant information to their queries using SQL.
-
-SQL-Based means you don't need any OpenAI API knowledge. With the Databend Cloud platform, you can perform these tasks using SQL. Some SQL AI functions of Databend Cloud include:
-
-- [ai_embedding_vector](https://databend.rs/doc/sql-functions/ai-functions/ai-embedding-vector): Get the vector from OpenAI API
-- [ai_text_completion](https://databend.rs/doc/sql-functions/ai-functions/ai-text-completion): Get the completion of a text
-- [cosine_distance](https://databend.rs/doc/sql-functions/ai-functions/ai-cosine-distance): Calculate the distance between embedding vectors
-
-## Overview
-
-The project follows this general process:
-
-1. Read and parse Markdown files from a directory.
-2. Extract the content and store it in the askbend.doc table.
-3. Compute embeddings for the content using Databend Cloud's built-in AI capabilities, including OpenAI's embedding generation, all through SQL.
-4. When a user queries, generate the query embedding using Databend Cloud's SQL-based `ai_embedding_vector` function.
-5. Perform a vector calculation to find the most relevant doc.content using Databend Cloud's SQL-based `cosine_distance` function.
-6. Concatenate the retrieved content and use OpenAI's completion capabilities with Databend Cloud's SQL-based `ai_text_completion` function.
-7. Output the completion result in Markdown format.
+AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create a SQL-based knowledge base from Markdown files.
 
 ## Setup
 
@@ -33,17 +10,7 @@ The project follows this general process:
 
 https://github.com/datafuselabs/askbend/releases
 
-### 2. Create a table in your Databend Cloud
-
-[table](schema/table.sql):
-```
-CREATE DATABASE askbend;
-USE askbend;
-
-CREATE TABLE doc (path VARCHAR, content VARCHAR, embedding ARRAY(FLOAT32));
-```
-
-### 3. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
+### 2. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
 
 ```
 # Usage:
@@ -66,20 +33,11 @@ port = 8081
 
 [query]
 top = 3
-product = "YourProductName"
-prompt = '''
-<your prompt including {{product}}> ... 
-Documentation sections:
-{{context}}
-
-Question:
-{{query}}
-'''
 ```
 
-### 4. Prepare your Markdown files by copying them to the `data/` directory
+### 3. Prepare your Markdown files by copying them to the `data/` directory
 
-### 5. Parse the Markdown files and build embeddings
+### 4. Parse the Markdown files and build embeddings
 
 ```
 ./target/release/askbend -c conf/askbend.toml --rebuild
@@ -96,13 +54,13 @@ Question:
 The `--rebuild` flag rebuilds all the embeddings for the data directory. This process may take a few minutes, depending on the number of Markdown files.
 
 
-### 6. Start the API server
+### 5. Start the API server
 
 ```
 ./target/release/askbend -c conf/askbend.toml
 ```
 
-### 7. Query your Markdown knowledge base using the API
+### 6. Query your Markdown knowledge base using the API
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/query
 ```

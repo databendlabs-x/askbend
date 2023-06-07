@@ -33,7 +33,7 @@ tokio = { version = "1.28", features = ["full"] }
 tokio-stream = "0.1.12"
 walkdir = "2.3.3"
 
-llmchain = { git = "https://github.com/shafishlabs/llmchain.rs" , rev = "5cd631f"}
+llmchain = { git = "https://github.com/shafishlabs/llmchain.rs" , rev = "f204230"}
 
 [dev-dependencies]
 

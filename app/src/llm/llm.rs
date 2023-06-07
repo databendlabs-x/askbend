@@ -46,7 +46,9 @@ impl BendLLM {
         let databend_embedding = Arc::new(DatabendEmbedding::create(&dsn));
 
         // create databend vector store.
-        let databend_vector_store = DatabendVectorStore::create(&dsn, databend_embedding);
+        let databend_vector_store = DatabendVectorStore::create(&dsn, databend_embedding)
+            .with_database(&self.conf.database.database)
+            .with_table(&self.conf.database.table);
         let similarities = databend_vector_store
             .similarity_search(question, topk)
             .await?;
