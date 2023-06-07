@@ -23,6 +23,7 @@ use llmchain::DocumentRetrievalPrompt;
 use llmchain::Prompt;
 use llmchain::VectorStore;
 use llmchain::LLM;
+use log::info;
 
 use crate::Config;
 
@@ -47,6 +48,8 @@ impl BendLLM {
             .similarity_search(question, topk)
             .await?;
 
+        info!("similarities: {:?}", similarities);
+
         let contexts = similarities
             .iter()
             .map(|x| format!("context:{}\nsource:{}", x.content, x.path))
@@ -64,6 +67,8 @@ impl BendLLM {
         input_variables.insert("question", question);
         input_variables.insert("contexts", &contexts);
         let prompt = prompt_template.format(input_variables)?;
+
+        info!("prompt: {}", prompt);
 
         let databend_llm = DatabendLLM::create(&dsn);
         let result = databend_llm.generate(&prompt).await?;
