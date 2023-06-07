@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::sync::Arc;
+
 use anyhow::Result;
 use askbend::APIHandler;
 use askbend::Config;
 use askbend::DatabendDriver;
-use askbend::FileOperator;
-use askbend::Markdown;
-use askbend::Parse;
-use askbend::RustCode;
 use env_logger::Builder;
 use env_logger::Env;
+use llmchain::DatabendEmbedding;
+use llmchain::DatabendVectorStore;
+use llmchain::DocumentLoader;
+use llmchain::DocumentPath;
+use llmchain::DocumentSplitter;
+use llmchain::MarkdownSplitter;
+use llmchain::VectorStore;
 use log::info;
 use tokio::time::Instant;
 
@@ -46,50 +51,35 @@ async fn main() -> Result<()> {
 
 /// Rebuild all embeddings.
 async fn rebuild_embedding(conf: &Config) -> Result<()> {
-    let ext = conf.data.file_ext.clone();
-    let ignore_dirs = conf.data.ignore_dirs.clone();
-    info!("Step-1: begin parser all {} files", ext);
-    let file_opt = FileOperator::create(&conf.data.path, &conf.data.file_ext, &ignore_dirs);
-    let files = file_opt.list()?;
+    let local_disk = llmchain::LocalDisk::create()?;
+    let directory_loader = llmchain::DirectoryLoader::create(local_disk);
+    let documents = directory_loader
+        .load(DocumentPath::Str(conf.data.path.clone()))
+        .await?;
+    info!("Step-1: parser all files:{}", documents.len());
 
-    let snippet_files = match conf.data.file_ext.as_str() {
-        "md" => Markdown::parse_multiple(
-            &files
-                .iter()
-                .map(|v| v.full_path.clone())
-                .collect::<Vec<String>>(),
-        ),
+    let documents = MarkdownSplitter::create().split_documents(&documents)?;
+    info!("Step-2: split all files to:{}", documents.len());
 
-        "rs" => RustCode::parse_multiple(
-            &files
-                .iter()
-                .map(|v| v.full_path.clone())
-                .collect::<Vec<String>>(),
-        ),
-        _ => Err(anyhow::Error::msg(format!(
-            "Only support file ext: md or rs, got:{}",
-            conf.data.file_ext
-        ))),
-    }?;
-
+    let now = Instant::now();
     info!(
-        "Step-1: finish parser all {} files:{}, sections:{}, tokens:{}",
-        ext,
-        files.len(),
-        snippet_files.all_snippets(),
-        snippet_files.all_tokens()
+        "Step-3: begin embedding to table:{}.{}",
+        conf.database.database, conf.database.table
     );
+    let dsn = conf.database.dsn.clone();
+    let databend_embedding = Arc::new(DatabendEmbedding::create(&dsn));
+    let databend_vector_store = DatabendVectorStore::create(&dsn, databend_embedding)
+        .with_database(&conf.database.database)
+        .with_table(&conf.database.table);
+    databend_vector_store.init().await?;
 
-    let dal = DatabendDriver::connect(conf)?;
-
-    info!("Step-2: begin insert to table");
-    dal.insert(&snippet_files).await?;
-    info!("Step-2: finish insert to table");
-
-    info!("Step-3: begin generate embedding, may take some minutes");
-    dal.embedding().await?;
-    info!("Step-3: finish generate embedding");
-
+    let _ = databend_vector_store.add_documents(documents).await?;
+    info!(
+        "Step-3: finish embedding to table:{}.{}, cost {}",
+        conf.database.database,
+        conf.database.table,
+        now.elapsed().as_secs()
+    );
     Ok(())
 }
 

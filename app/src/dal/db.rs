@@ -15,7 +15,8 @@
 use anyhow::Result;
 use chrono::DateTime;
 use chrono::Utc;
-use databend_driver::DatabendConnection;
+use databend_driver::new_connection;
+use databend_driver::Connection;
 use log::info;
 use tokio::time::Instant;
 use tokio_stream::StreamExt;
@@ -23,7 +24,6 @@ use tokio_stream::StreamExt;
 use crate::base::escape_sql_string;
 use crate::remove_markdown_links;
 use crate::Config;
-use crate::SnippetFiles;
 
 // Max completion tokens.
 const MAX_COMPLETION_LENGHT: usize = 8000;
@@ -39,12 +39,12 @@ pub struct DatabendDriver {
     pub min_distance: f32,
     pub product: String,
     pub prompt_template: String,
-    pub conn: DatabendConnection,
+    pub conn: Box<dyn Connection>,
 }
 
 impl DatabendDriver {
     pub fn connect(conf: &Config) -> Result<Self> {
-        let conn = DatabendConnection::create(&conf.database.dsn)?;
+        let conn = new_connection(&conf.database.dsn)?;
         Ok(DatabendDriver {
             database: conf.database.database.clone(),
             table: conf.database.table.clone(),
@@ -57,29 +57,6 @@ impl DatabendDriver {
             prompt_template: conf.query.prompt.to_string(),
             conn,
         })
-    }
-
-    /// Insert all the values to databend cloud.
-    pub async fn insert(&self, values: &SnippetFiles) -> Result<()> {
-        let sql = format!(
-            "INSERT INTO {}.{} (path, content) VALUES ",
-            self.database, self.table
-        );
-
-        let mut val_vec = vec![];
-        for snippet_file in &values.snippet_files {
-            for snippet in &snippet_file.code_snippets {
-                val_vec.push(format!(
-                    "('{}', '{}')",
-                    escape_sql_string(&snippet_file.file_path),
-                    remove_markdown_links(&escape_sql_string(snippet))
-                ));
-            }
-        }
-        let values = val_vec.join(",").to_string();
-
-        let final_sql = format!("{} {}", sql, values);
-        self.conn.exec(&final_sql).await
     }
 
     pub async fn insert_answer(
@@ -107,7 +84,8 @@ impl DatabendDriver {
             escape_sql_string(answer),
             now_str,
         );
-        self.conn.exec(&sql).await
+        let _ = self.conn.exec(&sql).await?;
+        Ok(())
     }
 
     pub async fn get_embedding(&self, text: &str) -> Result<String> {
@@ -176,7 +154,8 @@ impl DatabendDriver {
             self.database, self.table, self.max_content_length,
         );
 
-        self.conn.exec(&sql).await
+        let _ = self.conn.exec(&sql).await?;
+        Ok(())
     }
 
     /// Get a similarly content.
