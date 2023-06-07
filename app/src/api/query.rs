@@ -18,7 +18,8 @@ use actix_web::HttpResponse;
 use actix_web::Responder;
 use log::error;
 
-use crate::DatabendDriver;
+use crate::llm::BendLLM;
+use crate::Config;
 
 #[derive(serde::Deserialize)]
 pub struct Query {
@@ -31,17 +32,13 @@ struct Response {
 }
 
 /// curl -X POST -H "Content-Type: application/json" -d '{"query": "whats the fast way to load data to databend"}' http://localhost:8081/query
-pub async fn query_handler(
-    query: web::Json<Query>,
-    db: web::Data<DatabendDriver>,
-) -> impl Responder {
-    let result = db.query(&query.query).await;
+pub async fn query_handler(query: web::Json<Query>, conf: web::Data<Config>) -> impl Responder {
+    let llm = BendLLM::create(&conf);
+    let result = llm.query(&query.query).await;
     match result {
         Ok(result) => {
             let response = if !result.is_empty() {
-                Response {
-                    result: result[0].to_string(),
-                }
+                Response { result }
             } else {
                 Response {
                     result: "Sorry, I dont know how to help with that.".to_string(),

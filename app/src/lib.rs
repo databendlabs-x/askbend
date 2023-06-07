@@ -16,6 +16,7 @@ mod api;
 mod base;
 mod configs;
 mod dal;
+mod llm;
 
 pub use api::APIHandler;
 pub use base::*;
