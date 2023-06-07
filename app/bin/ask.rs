@@ -24,6 +24,7 @@ use llmchain::DatabendVectorStore;
 use llmchain::DocumentLoader;
 use llmchain::DocumentPath;
 use llmchain::DocumentSplitter;
+use llmchain::MarkdownLoader;
 use llmchain::MarkdownSplitter;
 use llmchain::VectorStore;
 use log::info;
@@ -51,7 +52,9 @@ async fn main() -> Result<()> {
 /// Rebuild all embeddings.
 async fn rebuild_embedding(conf: &Config) -> Result<()> {
     let local_disk = llmchain::LocalDisk::create()?;
-    let directory_loader = llmchain::DirectoryLoader::create(local_disk);
+    let markdown_loader = MarkdownLoader::create(local_disk.clone());
+    let directory_loader =
+        llmchain::DirectoryLoader::create(local_disk).with_loader("**/*.md", markdown_loader);
     let documents = directory_loader
         .load(DocumentPath::Str(conf.data.path.clone()))
         .await?;
