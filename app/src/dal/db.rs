@@ -26,12 +26,6 @@ pub struct DatabendDriver {
     pub database: String,
     pub table: String,
     pub answer_table: String,
-    pub min_content_length: usize,
-    pub max_content_length: usize,
-    pub top: usize,
-    pub min_distance: f32,
-    pub product: String,
-    pub prompt_template: String,
     pub conn: Box<dyn Connection>,
 }
 
@@ -42,12 +36,6 @@ impl DatabendDriver {
             database: conf.database.database.clone(),
             table: conf.database.table.clone(),
             answer_table: conf.database.answer_table.clone(),
-            min_content_length: conf.query.min_content_length,
-            max_content_length: conf.query.max_content_length,
-            top: conf.query.top,
-            min_distance: conf.query.min_distance.parse::<f32>().unwrap_or(0.28),
-            product: conf.query.product.to_string(),
-            prompt_template: conf.query.prompt.to_string(),
             conn,
         })
     }
