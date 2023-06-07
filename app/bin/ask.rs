@@ -17,7 +17,6 @@ use std::sync::Arc;
 use anyhow::Result;
 use askbend::APIHandler;
 use askbend::Config;
-use askbend::DatabendDriver;
 use env_logger::Builder;
 use env_logger::Env;
 use llmchain::DatabendEmbedding;
@@ -86,8 +85,7 @@ async fn rebuild_embedding(conf: &Config) -> Result<()> {
 /// Start the api server.
 async fn start_api_server(conf: &Config) -> Result<()> {
     info!("Start api server {}:{}", conf.server.host, conf.server.port);
-    let dal = DatabendDriver::connect(conf)?;
-    let handler = APIHandler::create(&conf.server, dal.clone());
+    let handler = APIHandler::create(conf);
     handler.start().await?;
     Ok(())
 }
