@@ -52,24 +52,12 @@ impl Default for LogConfig {
 pub struct DataConfig {
     #[clap(long = "data-path", default_value = "data")]
     pub path: String,
-
-    #[clap(long = "file-ext", default_value = "md")]
-    pub file_ext: String,
-
-    #[clap(
-        long = "ignore-dirs",
-        default_value = "rfc",
-        use_value_delimiter = true
-    )]
-    pub ignore_dirs: Vec<String>,
 }
 
 impl Default for DataConfig {
     fn default() -> Self {
         DataConfig {
             path: "data".to_string(),
-            file_ext: "md".to_string(),
-            ignore_dirs: vec!["rfc".to_string()],
         }
     }
 }

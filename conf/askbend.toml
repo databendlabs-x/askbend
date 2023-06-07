@@ -5,11 +5,6 @@
 # Path to the directory containing your markdown documents
 path = "data/"
 
-# md|rs
-file_ext = "md"
-
-ignore_dirs = ["rfc"]
-
 [database]
 database = "askbend"
 table = "doc"
