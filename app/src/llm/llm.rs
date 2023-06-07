@@ -39,6 +39,9 @@ impl BendLLM {
     pub async fn query(&self, question: &str) -> Result<String> {
         let dsn = self.conf.database.dsn.clone();
         let topk = self.conf.query.top;
+
+        info!("question: {}", question);
+
         // create embedding.
         let databend_embedding = Arc::new(DatabendEmbedding::create(&dsn));
 
