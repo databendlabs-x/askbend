@@ -16,10 +16,9 @@ mod api;
 mod base;
 mod configs;
 mod dal;
-mod files;
+mod llm;
 
 pub use api::APIHandler;
 pub use base::*;
 pub use configs::Config;
 pub use dal::DatabendDriver;
-pub use files::*;

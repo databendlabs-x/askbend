@@ -52,24 +52,12 @@ impl Default for LogConfig {
 pub struct DataConfig {
     #[clap(long = "data-path", default_value = "data")]
     pub path: String,
-
-    #[clap(long = "file-ext", default_value = "md")]
-    pub file_ext: String,
-
-    #[clap(
-        long = "ignore-dirs",
-        default_value = "rfc",
-        use_value_delimiter = true
-    )]
-    pub ignore_dirs: Vec<String>,
 }
 
 impl Default for DataConfig {
     fn default() -> Self {
         DataConfig {
             path: "data".to_string(),
-            file_ext: "md".to_string(),
-            ignore_dirs: vec!["rfc".to_string()],
         }
     }
 }
@@ -137,35 +125,13 @@ impl Default for ServerConfig {
 #[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
 pub struct QueryConfig {
-    #[clap(long = "min_content_length", default_value_t = 50)]
-    pub min_content_length: usize,
-
-    #[clap(long = "max_content_length", default_value_t = 8000)]
-    pub max_content_length: usize,
-
     #[clap(long = "top", default_value_t = 2)]
     pub top: usize,
-
-    #[clap(long = "min_distance", default_value_t)]
-    pub min_distance: String,
-
-    #[clap(long = "product", default_value_t)]
-    pub product: String,
-
-    #[clap(long = "prompt", default_value_t)]
-    pub prompt: String,
 }
 
 impl Default for QueryConfig {
     fn default() -> Self {
-        QueryConfig {
-            min_content_length: 50,
-            max_content_length: 8000,
-            top: 2,
-            min_distance: "".to_string(),
-            product: "".to_string(),
-            prompt: "".to_string(),
-        }
+        QueryConfig { top: 2 }
     }
 }
 

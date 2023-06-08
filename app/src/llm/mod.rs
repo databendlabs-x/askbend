@@ -12,23 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use anyhow::Result;
-use askbend::FileOperator;
-use askbend::Parse;
-use askbend::RustCode;
+#[allow(clippy::module_inception)]
+mod llm;
 
-#[test]
-pub fn test_rust_files() -> Result<()> {
-    let file = FileOperator::create("tests/testdata/", "rs", &[]);
-    let metas = file.list()?;
-
-    let rusts = RustCode::parse_multiple(&[metas[0].full_path.clone()])?;
-    for code in &rusts.snippet_files {
-        assert_eq!(code.file_path, "tests/testdata/rust.rs");
-        for snippet in &code.code_snippets {
-            println!("--{:?}", snippet);
-        }
-    }
-
-    Ok(())
-}
+pub use llm::BendLLM;

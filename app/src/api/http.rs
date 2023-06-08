@@ -21,27 +21,21 @@ use anyhow::Result;
 
 use crate::api::query::query_handler;
 use crate::api::status::status_handler;
-use crate::configs::ServerConfig;
-use crate::DatabendDriver;
+use crate::Config;
 
 pub struct APIHandler {
-    pub conf: ServerConfig,
-    pub db: DatabendDriver,
+    pub conf: Config,
 }
 
 impl APIHandler {
-    pub fn create(conf: &ServerConfig, db: DatabendDriver) -> Self {
-        APIHandler {
-            conf: conf.clone(),
-            db,
-        }
+    pub fn create(conf: &Config) -> Self {
+        APIHandler { conf: conf.clone() }
     }
 
     pub async fn start(self) -> Result<()> {
         let conf = self.conf.clone();
-        let host = conf.host.clone();
-        let port = conf.port;
-        let data = self.db.clone();
+        let host = conf.server.host.clone();
+        let port = conf.server.port;
 
         HttpServer::new(move || {
             let mut cors = Cors::default()
@@ -52,12 +46,12 @@ impl APIHandler {
                     http::header::CONTENT_TYPE,
                 ])
                 .max_age(3600);
-            for origin in &conf.cors {
+            for origin in &conf.server.cors {
                 cors = cors.allowed_origin(origin);
             }
             App::new()
                 .wrap(cors)
-                .app_data(web::Data::new(data.clone()))
+                .app_data(web::Data::new(conf.clone()))
                 .route("/status", web::get().to(status_handler))
                 .route("/query", web::post().to(query_handler))
         })
