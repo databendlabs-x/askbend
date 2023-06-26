@@ -83,7 +83,7 @@ async fn rebuild_qa_embedding(conf: &Config) -> Result<()> {
         .with_table(&conf.qa.table);
     databend_vector_store.init().await?;
 
-    let _ = databend_vector_store.add_documents(documents).await?;
+    let _ = databend_vector_store.add_documents(&documents).await?;
     info!(
         "Step-3: finish embedding to table:{}.{}, cost {}",
         conf.qa.database,
