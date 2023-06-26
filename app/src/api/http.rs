@@ -52,6 +52,7 @@ impl APIHandler {
                 .wrap(cors)
                 .app_data(web::Data::new(conf.clone()))
                 .route("/query", web::post().to(qa_query_handler))
+                .route("/qa/query", web::post().to(qa_query_handler))
         })
         .bind(format!("{}:{}", host, port))?
         .run()

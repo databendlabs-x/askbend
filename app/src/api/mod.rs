@@ -13,7 +13,7 @@
 // limitations under the License.
 
 mod http;
-mod qa_query;
+mod qa;
 
 pub use http::APIHandler;
-pub use qa_query::qa_query_handler;
+pub use qa::qa_query_handler;

@@ -8,7 +8,7 @@ AskBend is a project built in Rust that leverages the [llmchain.rs](https://gith
 ## Setup
 
 <details>
-  <summary>Setup Query&Answering</summary>
+  <summary>Setup Question&Answering</summary>
 
 ### 1. Download 
 
@@ -64,7 +64,7 @@ The `--rebuild` flag rebuilds all the embeddings for the data directory. This pr
 
 ### 6. Query your Markdown knowledge base using the API
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/query
+curl -X POST -H "Content-Type: application/json" -d '{"query": "tell me how to do copy"}' http://localhost:8081/qa/query
 ```
 Response:
 ```
@@ -77,7 +77,7 @@ This API document describes how to use the Databend query API to submit queries 
 
 ### Endpoint
 
-http://<your-ip>:8081/query
+http://<your-ip>:8081/qa/query
 
 ### Request
 

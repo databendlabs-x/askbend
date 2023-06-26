@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-mod qa;
+mod qa_db;
+mod qa_embedding;
+mod qa_llm;
 
-pub use qa::DatabendDriver;
+pub use qa_db::QADatabase;
+pub use qa_embedding::QAEmbedding;
+pub use qa_llm::QALLM;

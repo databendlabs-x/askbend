@@ -27,13 +27,13 @@ use log::info;
 
 use crate::Config;
 
-pub struct BendLLM {
+pub struct QALLM {
     conf: Config,
 }
 
-impl BendLLM {
+impl QALLM {
     pub fn create(conf: &Config) -> Self {
-        BendLLM { conf: conf.clone() }
+        QALLM { conf: conf.clone() }
     }
 
     pub async fn query(&self, question: &str) -> Result<String> {

@@ -15,10 +15,11 @@
 mod api;
 mod base;
 mod configs;
-mod dal;
-mod llm;
+mod qa;
 
 pub use api::APIHandler;
-pub use base::*;
+pub use base::escape_sql_string;
 pub use configs::Config;
-pub use dal::DatabendDriver;
+pub use qa::QADatabase;
+pub use qa::QAEmbedding;
+pub use qa::QALLM;

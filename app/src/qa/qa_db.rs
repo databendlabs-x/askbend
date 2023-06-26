@@ -22,17 +22,17 @@ use crate::base::escape_sql_string;
 use crate::Config;
 
 #[derive(Clone)]
-pub struct DatabendDriver {
+pub struct QADatabase {
     pub database: String,
     pub table: String,
     pub answer_table: String,
     pub conn: Box<dyn Connection>,
 }
 
-impl DatabendDriver {
+impl QADatabase {
     pub fn connect(conf: &Config) -> Result<Self> {
         let conn = new_connection(&conf.qa.dsn)?;
-        Ok(DatabendDriver {
+        Ok(QADatabase {
             database: conf.qa.database.clone(),
             table: conf.qa.table.clone(),
             answer_table: conf.qa.answer_table.clone(),
