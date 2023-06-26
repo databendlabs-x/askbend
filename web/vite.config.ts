@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     open: true,
     proxy: {
-      '/query': {
+      '/qa/query': {
         target: 'https://ask.databend.rs',
         changeOrigin: true,
         headers: {
