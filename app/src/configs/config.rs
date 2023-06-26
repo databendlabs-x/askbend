@@ -13,9 +13,7 @@
 // limitations under the License.
 
 use std::env;
-use std::fmt;
 use std::fmt::Debug;
-use std::fmt::Formatter;
 
 use anyhow::Result;
 use clap::Parser;
@@ -26,76 +24,8 @@ use serfig::collectors::from_file;
 use serfig::collectors::from_self;
 use serfig::parsers::Toml;
 
-#[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(default, deny_unknown_fields)]
-pub struct LogConfig {
-    /// Log level <DEBUG|INFO|ERROR>
-    #[clap(long = "log-level", default_value = "INFO")]
-    pub level: String,
-
-    /// Log file dir
-    #[clap(long = "log-dir", default_value = "_logs")]
-    pub dir: String,
-}
-
-impl Default for LogConfig {
-    fn default() -> Self {
-        LogConfig {
-            level: "INFO".to_string(),
-            dir: "_logs".to_string(),
-        }
-    }
-}
-
-#[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(default, deny_unknown_fields)]
-pub struct DataConfig {
-    #[clap(long = "data-path", default_value = "data")]
-    pub path: String,
-}
-
-impl Default for DataConfig {
-    fn default() -> Self {
-        DataConfig {
-            path: "data".to_string(),
-        }
-    }
-}
-
-#[derive(Parser, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(default, deny_unknown_fields)]
-pub struct DatabaseConfig {
-    #[clap(long = "database", default_value_t)]
-    pub database: String,
-    #[clap(long = "table", default_value_t)]
-    pub table: String,
-    #[clap(long = "answer_table", default_value_t)]
-    pub answer_table: String,
-    #[clap(long = "dsn", default_value_t)]
-    pub dsn: String,
-}
-
-impl Debug for DatabaseConfig {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.debug_struct("DatabaseConfig")
-            .field("database", &self.database)
-            .field("table", &self.table)
-            .field("answer_table", &self.answer_table)
-            .field("dsn", &"******")
-            .finish()
-    }
-}
-
-impl Default for DatabaseConfig {
-    fn default() -> Self {
-        DatabaseConfig {
-            database: "".to_string(),
-            table: "".to_string(),
-            answer_table: "".to_string(),
-            dsn: "".to_string(),
-        }
-    }
-}
+use crate::configs::LogConfig;
+use crate::configs::QAConfig;
 
 #[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(default, deny_unknown_fields)]
@@ -106,9 +36,6 @@ pub struct ServerConfig {
     pub port: usize,
 
     pub cors: Vec<String>,
-
-    #[clap(long = "rebuild", default_value_t)]
-    pub rebuild: bool,
 }
 
 impl Default for ServerConfig {
@@ -117,21 +44,7 @@ impl Default for ServerConfig {
             host: "".to_string(),
             port: 0,
             cors: Vec::new(),
-            rebuild: false,
         }
-    }
-}
-
-#[derive(Parser, Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(default, deny_unknown_fields)]
-pub struct QueryConfig {
-    #[clap(long = "top", default_value_t = 2)]
-    pub top: usize,
-}
-
-impl Default for QueryConfig {
-    fn default() -> Self {
-        QueryConfig { top: 2 }
     }
 }
 
@@ -142,16 +55,10 @@ pub struct Config {
     pub log: LogConfig,
 
     #[clap(flatten)]
-    pub data: DataConfig,
-
-    #[clap(flatten)]
-    pub database: DatabaseConfig,
-
-    #[clap(flatten)]
     pub server: ServerConfig,
 
     #[clap(flatten)]
-    pub query: QueryConfig,
+    pub qa: QAConfig,
 
     #[clap(long, short = 'c', default_value_t)]
     pub config_file: String,
@@ -161,10 +68,8 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             log: Default::default(),
-            data: Default::default(),
-            database: Default::default(),
             server: Default::default(),
-            query: Default::default(),
+            qa: Default::default(),
             config_file: "".to_string(),
         }
     }

@@ -31,11 +31,11 @@ pub struct DatabendDriver {
 
 impl DatabendDriver {
     pub fn connect(conf: &Config) -> Result<Self> {
-        let conn = new_connection(&conf.database.dsn)?;
+        let conn = new_connection(&conf.qa.dsn)?;
         Ok(DatabendDriver {
-            database: conf.database.database.clone(),
-            table: conf.database.table.clone(),
-            answer_table: conf.database.answer_table.clone(),
+            database: conf.qa.database.clone(),
+            table: conf.qa.table.clone(),
+            answer_table: conf.qa.answer_table.clone(),
             conn,
         })
     }

@@ -19,8 +19,7 @@ use actix_web::App;
 use actix_web::HttpServer;
 use anyhow::Result;
 
-use crate::api::query::query_handler;
-use crate::api::status::status_handler;
+use crate::api::qa_query_handler;
 use crate::Config;
 
 pub struct APIHandler {
@@ -52,8 +51,7 @@ impl APIHandler {
             App::new()
                 .wrap(cors)
                 .app_data(web::Data::new(conf.clone()))
-                .route("/status", web::get().to(status_handler))
-                .route("/query", web::post().to(query_handler))
+                .route("/query", web::post().to(qa_query_handler))
         })
         .bind(format!("{}:{}", host, port))?
         .run()
