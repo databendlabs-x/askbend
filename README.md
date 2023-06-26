@@ -2,9 +2,13 @@
 
 ## Demo https://ask.databend.rs/
 
-AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create a SQL-based knowledge base from Markdown files.
+AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create:
+- SQL-based knowledge base from Markdown files
 
 ## Setup
+
+<details>
+  <summary>Setup Query&Answering</summary>
 
 ### 1. Download 
 
@@ -110,4 +114,5 @@ If you want to expose your host:
 ```js
 yarn run dev-host (or npm run dev-host)
 ```
+</details>
 
