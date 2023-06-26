@@ -2,9 +2,13 @@
 
 ## Demo https://ask.databend.rs/
 
-AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create a SQL-based knowledge base from Markdown files.
+AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create:
+- SQL-based knowledge base from Markdown files
 
 ## Setup
+
+<details>
+  <summary>Setup Query&Answering</summary>
 
 ### 1. Download 
 
@@ -16,23 +20,21 @@ https://github.com/datafuselabs/askbend/releases
 # Usage:
 # askbend -c askbend.toml
 
-[data]
+[qa]
 # Path to the directory containing your markdown documents
 path = "data/"
 
-[database]
 database = "askbend"
 table = "doc"
 # Data source name (DSN) for connecting to your Databend cloud warehouse
 # https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
 dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
+top = 3
 
 [server]
 host = "0.0.0.0"
 port = 8081
 
-[query]
-top = 3
 ```
 
 ### 3. Prepare your Markdown files by copying them to the `data/` directory
@@ -112,4 +114,5 @@ If you want to expose your host:
 ```js
 yarn run dev-host (or npm run dev-host)
 ```
+</details>
 

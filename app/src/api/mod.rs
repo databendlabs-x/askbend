@@ -13,7 +13,7 @@
 // limitations under the License.
 
 mod http;
-pub(crate) mod query;
-pub(crate) mod status;
+mod qa_query;
 
 pub use http::APIHandler;
+pub use qa_query::qa_query_handler;

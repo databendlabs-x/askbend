@@ -32,7 +32,7 @@ struct Response {
 }
 
 /// curl -X POST -H "Content-Type: application/json" -d '{"query": "whats the fast way to load data to databend"}' http://localhost:8081/query
-pub async fn query_handler(query: web::Json<Query>, conf: web::Data<Config>) -> impl Responder {
+pub async fn qa_query_handler(query: web::Json<Query>, conf: web::Data<Config>) -> impl Responder {
     let llm = BendLLM::create(&conf);
     let result = llm.query(&query.query).await;
     match result {

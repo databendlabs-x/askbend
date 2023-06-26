@@ -13,6 +13,6 @@
 // limitations under the License.
 
 #[allow(clippy::module_inception)]
-mod llm;
+mod qa;
 
-pub use llm::BendLLM;
+pub use qa::BendLLM;

@@ -312,9 +312,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.70"
+version = "1.0.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7de8ce5e0f9f8d88245311066a578d72b7af3e7088f32783804676302df237e4"
+checksum = "9c7d0618f0e0b7e8ff11427422b64564d5fb0be1940354bfe2e0529b18a9d9b8"
 
 [[package]]
 name = "arc-swap"
@@ -677,6 +677,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c3c1a368f70d6cf7302d78f8f7093da241fb8e8807c05cc9e51a125895a6d5b"
 
 [[package]]
+name = "bit-set"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0700ddab506f33b20a03b13996eccd309a48e5ff77d0d95926aa0210fb4e95f1"
+dependencies = [
+ "bit-vec",
+]
+
+[[package]]
+name = "bit-vec"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "349f9b6a179ed607305526ca489b34ad0a41aed5f7980fa90eb03160b69598fb"
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -713,10 +728,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "bstr"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a246e68bb43f6cd9db24bea052a53e40405417c5fb372e3d1a8a7f770a564ef5"
+dependencies = [
+ "memchr",
+ "once_cell",
+ "regex-automata",
+ "serde",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d261e256854913907f67ed06efbc3338dfe6179796deefc1ff763fc1aee5535"
+
+[[package]]
+name = "bytecount"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c676a478f63e9fa2dd5368a42f28bba0d6c560b775f38583c8bbaa7fcd67c9c"
 
 [[package]]
 name = "byteorder"
@@ -1260,6 +1293,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "fancy-regex"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b95f7c0680e4142284cf8b22c14a476e87d61b004a3a0861872b32ef7ead40a2"
+dependencies = [
+ "bit-set",
+ "regex",
+]
+
+[[package]]
 name = "fastrand"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1432,10 +1475,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ad0a93d233ebf96623465aad4046a8d3aa4da22d4f4beba5388838c8a434bbb4"
 
 [[package]]
-name = "glob-match"
-version = "0.2.1"
+name = "git2"
+version = "0.17.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9985c9503b412198aa4197559e9a318524ebc4519c229bfa05a535828c950b9d"
+checksum = "7b989d6a7ca95a362cf2cfc5ad688b3a467be1f87e480b8dad07fee8c79b0044"
+dependencies = [
+ "bitflags",
+ "libc",
+ "libgit2-sys",
+ "log",
+ "openssl-probe",
+ "openssl-sys",
+ "url",
+]
+
+[[package]]
+name = "glob"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "h2"
@@ -1857,10 +1915,50 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99227334921fae1a979cf0bfdfcc6b3e5ce376ef57e16fb6fb3ea2ed6095f80c"
 
 [[package]]
+name = "libgit2-sys"
+version = "0.15.2+1.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a80df2e11fb4a61f4ba2ab42dbe7f74468da143f1a75c74e11dee7c813f694fa"
+dependencies = [
+ "cc",
+ "libc",
+ "libssh2-sys",
+ "libz-sys",
+ "openssl-sys",
+ "pkg-config",
+]
+
+[[package]]
 name = "libm"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7012b1bbb0719e1097c47611d3898568c546d597c2e74d66f6087edd5233ff4"
+
+[[package]]
+name = "libssh2-sys"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2dc8a030b787e2119a731f1951d6a773e2280c660f8ec4b0f5e1505a386e71ee"
+dependencies = [
+ "cc",
+ "libc",
+ "libz-sys",
+ "openssl-sys",
+ "pkg-config",
+ "vcpkg",
+]
+
+[[package]]
+name = "libz-sys"
+version = "1.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56ee889ecc9568871456d42f603d6a0ce59ff328d291063a45cbdf0036baf6db"
+dependencies = [
+ "cc",
+ "libc",
+ "pkg-config",
+ "vcpkg",
+]
 
 [[package]]
 name = "link-cplusplus"
@@ -1880,7 +1978,7 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 [[package]]
 name = "llmchain"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "llmchain-embeddings",
  "llmchain-llms",
@@ -1892,12 +1990,16 @@ dependencies = [
 [[package]]
 name = "llmchain-common"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+dependencies = [
+ "anyhow",
+ "tiktoken-rs",
+]
 
 [[package]]
 name = "llmchain-embeddings"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1909,7 +2011,7 @@ dependencies = [
 [[package]]
 name = "llmchain-llms"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-openai",
@@ -1917,6 +2019,7 @@ dependencies = [
  "databend-driver",
  "llmchain-common",
  "log",
+ "parking_lot",
  "serde_json",
  "tokio",
  "tokio-stream",
@@ -1925,37 +2028,44 @@ dependencies = [
 [[package]]
 name = "llmchain-loaders"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
- "glob-match",
+ "futures",
+ "git2",
+ "glob",
+ "llmchain-common",
  "log",
  "md5",
  "octocrab",
  "opendal",
+ "parking_lot",
+ "patch",
  "rayon",
  "regex",
  "tokio",
+ "uuid",
 ]
 
 [[package]]
 name = "llmchain-prompts"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
+ "parking_lot",
 ]
 
 [[package]]
 name = "llmchain-vector-stores"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=f204230#f204230855b29f68dfb4df83e84fa13c01003b02"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
  "databend-driver",
- "futures-util",
+ "futures",
  "llmchain-common",
  "llmchain-embeddings",
  "llmchain-loaders",
@@ -2093,6 +2203,17 @@ checksum = "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
 dependencies = [
  "memchr",
  "minimal-lexical",
+]
+
+[[package]]
+name = "nom_locate"
+version = "4.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1e299bf5ea7b212e811e71174c5d1a5d065c4c0ad0c8691ecb1f97e3e66025e"
+dependencies = [
+ "bytecount",
+ "memchr",
+ "nom",
 ]
 
 [[package]]
@@ -2290,6 +2411,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ff011a302c396a5197692431fc1948019154afc178baf7d8e37367442a4601cf"
 
 [[package]]
+name = "openssl-sys"
+version = "0.9.90"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "374533b0e45f3a7ced10fcaeccca020e66656bc03dac384f852e4e5a7a8104a6"
+dependencies = [
+ "cc",
+ "libc",
+ "pkg-config",
+ "vcpkg",
+]
+
+[[package]]
 name = "ordered-multimap"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2327,6 +2460,17 @@ name = "paste"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f746c4065a8fa3fe23974dd82f15431cc8d40779821001404d10d2e79ca7d79"
+
+[[package]]
+name = "patch"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15c07fdcdd8b05bdcf2a25bc195b6c34cbd52762ada9dba88bf81e7686d14e7a"
+dependencies = [
+ "chrono",
+ "nom",
+ "nom_locate",
+]
 
 [[package]]
 name = "pem"
@@ -2541,6 +2685,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "regex-automata"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c230d73fb8d8c1b9c0b3135c5142a8acee3a0558fb8db5cf1cb65f8d7862132"
+
+[[package]]
 name = "regex-syntax"
 version = "0.6.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2693,6 +2843,12 @@ name = "rustc-demangle"
 version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
+
+[[package]]
+name = "rustc-hash"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "rustc_version"
@@ -3132,6 +3288,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "tiktoken-rs"
+version = "0.4.4"
+source = "git+https://github.com/BohuTANG/tiktoken-rs#99f316ae8abddcc9dc181b5e8c1ad748733362d5"
+dependencies = [
+ "anyhow",
+ "base64 0.21.0",
+ "bstr",
+ "fancy-regex",
+ "lazy_static",
+ "parking_lot",
+ "rustc-hash",
+]
+
+[[package]]
 name = "time"
 version = "0.1.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3450,6 +3620,12 @@ dependencies = [
  "getrandom",
  "serde",
 ]
+
+[[package]]
+name = "vcpkg"
+version = "0.2.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
 
 [[package]]
 name = "version_check"

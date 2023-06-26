@@ -37,8 +37,8 @@ impl BendLLM {
     }
 
     pub async fn query(&self, question: &str) -> Result<String> {
-        let dsn = self.conf.database.dsn.clone();
-        let topk = self.conf.query.top;
+        let dsn = self.conf.qa.dsn.clone();
+        let topk = self.conf.qa.top;
 
         info!("question: {}", question);
 
@@ -47,8 +47,8 @@ impl BendLLM {
 
         // create databend vector store.
         let databend_vector_store = DatabendVectorStore::create(&dsn, databend_embedding)
-            .with_database(&self.conf.database.database)
-            .with_table(&self.conf.database.table);
+            .with_database(&self.conf.qa.database)
+            .with_table(&self.conf.qa.table);
         let similarities = databend_vector_store
             .similarity_search(question, topk)
             .await?;

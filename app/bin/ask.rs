@@ -38,10 +38,10 @@ async fn main() -> Result<()> {
     let conf = Config::load()?;
     info!("config: {:?}", conf);
 
-    if conf.server.rebuild {
+    if conf.qa.rebuild {
         let now = Instant::now();
-        rebuild_embedding(&conf).await?;
-        info!("Rebuild done, cost:{}", now.elapsed().as_secs());
+        rebuild_qa_embedding(&conf).await?;
+        info!("QA rebuild done, cost:{}", now.elapsed().as_secs());
     } else {
         start_api_server(&conf).await?;
     }
@@ -49,14 +49,22 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-/// Rebuild all embeddings.
-async fn rebuild_embedding(conf: &Config) -> Result<()> {
+/// Start the api server.
+async fn start_api_server(conf: &Config) -> Result<()> {
+    info!("Start api server {}:{}", conf.server.host, conf.server.port);
+    let handler = APIHandler::create(conf);
+    handler.start().await?;
+    Ok(())
+}
+
+/// Rebuild QA all embeddings.
+async fn rebuild_qa_embedding(conf: &Config) -> Result<()> {
     let local_disk = llmchain::LocalDisk::create()?;
     let markdown_loader = MarkdownLoader::create(local_disk.clone());
     let directory_loader =
         llmchain::DirectoryLoader::create(local_disk).with_loader("**/*.md", markdown_loader);
     let documents = directory_loader
-        .load(DocumentPath::Str(conf.data.path.clone()))
+        .load(DocumentPath::Str(conf.qa.path.clone()))
         .await?;
     info!("Step-1: parser all files:{}", documents.len());
 
@@ -66,29 +74,21 @@ async fn rebuild_embedding(conf: &Config) -> Result<()> {
     let now = Instant::now();
     info!(
         "Step-3: begin embedding to table:{}.{}",
-        conf.database.database, conf.database.table
+        conf.qa.database, conf.qa.table
     );
-    let dsn = conf.database.dsn.clone();
+    let dsn = conf.qa.dsn.clone();
     let databend_embedding = Arc::new(DatabendEmbedding::create(&dsn));
     let databend_vector_store = DatabendVectorStore::create(&dsn, databend_embedding)
-        .with_database(&conf.database.database)
-        .with_table(&conf.database.table);
+        .with_database(&conf.qa.database)
+        .with_table(&conf.qa.table);
     databend_vector_store.init().await?;
 
-    let _ = databend_vector_store.add_documents(documents).await?;
+    let _ = databend_vector_store.add_documents(&documents).await?;
     info!(
         "Step-3: finish embedding to table:{}.{}, cost {}",
-        conf.database.database,
-        conf.database.table,
+        conf.qa.database,
+        conf.qa.table,
         now.elapsed().as_secs()
     );
-    Ok(())
-}
-
-/// Start the api server.
-async fn start_api_server(conf: &Config) -> Result<()> {
-    info!("Start api server {}:{}", conf.server.host, conf.server.port);
-    let handler = APIHandler::create(conf);
-    handler.start().await?;
     Ok(())
 }
