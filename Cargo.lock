@@ -1978,7 +1978,7 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 [[package]]
 name = "llmchain"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "llmchain-embeddings",
  "llmchain-llms",
@@ -1990,7 +1990,7 @@ dependencies = [
 [[package]]
 name = "llmchain-common"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "tiktoken-rs",
@@ -1999,7 +1999,7 @@ dependencies = [
 [[package]]
 name = "llmchain-embeddings"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2011,7 +2011,7 @@ dependencies = [
 [[package]]
 name = "llmchain-llms"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-openai",
@@ -2028,7 +2028,7 @@ dependencies = [
 [[package]]
 name = "llmchain-loaders"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2051,7 +2051,7 @@ dependencies = [
 [[package]]
 name = "llmchain-prompts"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "parking_lot",
@@ -2060,7 +2060,7 @@ dependencies = [
 [[package]]
 name = "llmchain-vector-stores"
 version = "0.1.0"
-source = "git+https://github.com/shafishlabs/llmchain.rs?rev=2315f90#2315f907d404ffa1b5885f32885bbdf7281e74b6"
+source = "git+https://github.com/shafishlabs/llmchain.rs#2315f907d404ffa1b5885f32885bbdf7281e74b6"
 dependencies = [
  "anyhow",
  "async-trait",
