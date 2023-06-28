@@ -10,3 +10,9 @@ table = "doc"
 # https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
 dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
 top = 3
+
+[github]
+github_token = ""
+llm_max_tokens = 100000
+dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
+repos = [""]

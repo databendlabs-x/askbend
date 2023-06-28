@@ -13,10 +13,12 @@
 // limitations under the License.
 
 mod config;
+mod github;
 mod log;
 mod qa;
 
 pub use config::*;
+pub use github::GithubConfig;
 pub use qa::*;
 
 pub use self::log::LogConfig;

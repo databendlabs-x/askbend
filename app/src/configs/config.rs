@@ -24,6 +24,7 @@ use serfig::collectors::from_file;
 use serfig::collectors::from_self;
 use serfig::parsers::Toml;
 
+use crate::configs::GithubConfig;
 use crate::configs::LogConfig;
 use crate::configs::QAConfig;
 
@@ -60,6 +61,9 @@ pub struct Config {
     #[clap(flatten)]
     pub qa: QAConfig,
 
+    #[clap(flatten)]
+    pub github: GithubConfig,
+
     #[clap(long, short = 'c', default_value_t)]
     pub config_file: String,
 }
@@ -70,6 +74,7 @@ impl Default for Config {
             log: Default::default(),
             server: Default::default(),
             qa: Default::default(),
+            github: Default::default(),
             config_file: "".to_string(),
         }
     }
