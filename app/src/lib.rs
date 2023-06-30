@@ -15,11 +15,13 @@
 mod api;
 mod base;
 mod configs;
+mod github;
 mod qa;
 
 pub use api::APIHandler;
 pub use base::escape_sql_string;
 pub use configs::Config;
+pub use github::GithubComment;
 pub use qa::QADatabase;
 pub use qa::QAEmbedding;
 pub use qa::QALLM;

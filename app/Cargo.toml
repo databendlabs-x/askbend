@@ -25,15 +25,17 @@ regex = "1.7.3"
 serde = { version = "1.0.159", features = ["derive"] }
 serfig = "0.0.3"
 anyhow = "^1.0.70"
-syn = "1.0"
+octocrab = "0.25.1"
 proc-macro2 = "1.0"
 quote = "1.0"
 markdown = "0.3.0"
+syn = "1.0"
 tokio = { version = "1.28", features = ["full"] }
 tokio-stream = "0.1.12"
+url = "2.4.0"
 walkdir = "2.3.3"
 
-llmchain = { git = "https://github.com/shafishlabs/llmchain.rs"}
+llmchain = { git = "https://github.com/shafishlabs/llmchain.rs", rev = "8e04987f3264508a9ddd4f921356a8f60a12aff5"}
 
 [dev-dependencies]
 

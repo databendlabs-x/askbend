@@ -12,13 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-mod config;
-mod github;
-mod log;
-mod qa;
+mod github_comment;
 
-pub use config::*;
-pub use github::GithubConfig;
-pub use qa::*;
-
-pub use self::log::LogConfig;
+pub use github_comment::GithubComment;
