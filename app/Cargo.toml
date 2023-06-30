@@ -35,7 +35,7 @@ tokio-stream = "0.1.12"
 url = "2.4.0"
 walkdir = "2.3.3"
 
-llmchain = { git = "https://github.com/shafishlabs/llmchain.rs"}
+llmchain = { git = "https://github.com/shafishlabs/llmchain.rs", rev = "8e04987f3264508a9ddd4f921356a8f60a12aff5"}
 
 [dev-dependencies]
 
