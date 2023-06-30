@@ -12,16 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-mod api;
-mod base;
-mod configs;
-mod github;
-mod qa;
+mod github_comment;
 
-pub use api::APIHandler;
-pub use base::escape_sql_string;
-pub use configs::Config;
-pub use github::GithubComment;
-pub use qa::QADatabase;
-pub use qa::QAEmbedding;
-pub use qa::QALLM;
+pub use github_comment::GithubComment;

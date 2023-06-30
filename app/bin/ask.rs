@@ -15,6 +15,7 @@
 use anyhow::Result;
 use askbend::APIHandler;
 use askbend::Config;
+use askbend::GithubComment;
 use askbend::QAEmbedding;
 use env_logger::Builder;
 use env_logger::Env;
@@ -35,6 +36,9 @@ async fn main() -> Result<()> {
         qa_embedding.rebuild().await?;
         info!("QA rebuild done, cost:{}", now.elapsed().as_secs());
     } else {
+        let github_comments = GithubComment::create(&conf);
+        github_comments.start();
+
         start_api_server(&conf).await?;
     }
 

@@ -28,8 +28,8 @@ pub struct GithubConfig {
     pub github_token: String,
     #[clap(long = "llm_max_tokens", default_value_t = 100000)]
     pub llm_max_tokens: usize,
-    #[clap(long = "dsn", default_value_t)]
-    pub dsn: String,
+    #[clap(long = "databend_dsn", default_value_t)]
+    pub databend_dsn: String,
 
     #[clap(long = "repos")]
     pub repos: Option<Vec<String>>,
@@ -39,7 +39,7 @@ impl Debug for GithubConfig {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("QAConfig")
             .field("github_token", &"******")
-            .field("dsn", &"******")
+            .field("databend_dsn", &"******")
             .field("llm_max_tokens", &self.llm_max_tokens)
             .field("repos", &self.repos)
             .finish()
@@ -51,7 +51,7 @@ impl Default for GithubConfig {
         GithubConfig {
             github_token: "".to_string(),
             llm_max_tokens: 100000,
-            dsn: "".to_string(),
+            databend_dsn: "".to_string(),
             repos: None,
         }
     }
