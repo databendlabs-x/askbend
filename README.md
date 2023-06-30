@@ -1,9 +1,10 @@
-# AskBend: Empower developers to explore & implement your knowledge base
+# AskBend: Leveraging Databend Cloud for Advanced AI Services
 
 ## Demo https://ask.databend.rs/
 
 AskBend is a project built in Rust that leverages the [llmchain.rs](https://github.com/shafishlabs/llmchain.rs) library to create:
 - SQL-based knowledge base from Markdown files
+- GitHub Pull Request Summary
 
 ## Setup
 
@@ -20,6 +21,11 @@ https://github.com/datafuselabs/askbend/releases
 # Usage:
 # askbend -c askbend.toml
 
+[server]
+host = "0.0.0.0"
+port = 8081
+
+
 [qa]
 # Path to the directory containing your markdown documents
 path = "data/"
@@ -30,10 +36,6 @@ table = "doc"
 # https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
 dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
 top = 3
-
-[server]
-host = "0.0.0.0"
-port = 8081
 
 ```
 
@@ -115,4 +117,40 @@ If you want to expose your host:
 yarn run dev-host (or npm run dev-host)
 ```
 </details>
+
+<details>
+  <summary>Setup Github Pull Request Summary</summary>
+
+### 1. Download
+
+https://github.com/datafuselabs/askbend/releases
+
+### 2. Modify the configuration file [conf/askbend.toml](conf/askbend.toml)
+
+```
+# Usage:
+# askbend -c askbend.toml
+
+[server]
+host = "0.0.0.0"
+port = 8081
+
+
+[github]
+github_token = "your-github-token"
+llm_max_tokens = 100000
+# Data source name (DSN) for connecting to your Databend cloud warehouse
+# https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
+dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
+repos = ["your-github-repo"]
+
+```
+### 3. Start the API server
+
+```
+./target/release/askbend -c conf/askbend.toml
+```
+
+</details>
+
 
