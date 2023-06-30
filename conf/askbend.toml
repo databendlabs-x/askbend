@@ -1,6 +1,10 @@
 # Usage:
 # askbend -c askbend.toml
 
+[server]
+host = "0.0.0.0"
+port = 8081
+
 # Question answering config
 [qa]
 path = "data/"
@@ -12,8 +16,10 @@ dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/defa
 top = 3
 
 [github]
-github_token = ""
+github_token = "your-github-token"
 llm_max_tokens = 100000
+# Data source name (DSN) for connecting to your Databend cloud warehouse
+# https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
 dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
-repos = [""]
+repos = ["your-github-repo"]
 
