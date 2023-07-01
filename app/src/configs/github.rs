@@ -33,6 +33,9 @@ pub struct GithubConfig {
 
     #[clap(long = "repos")]
     pub repos: Option<Vec<String>>,
+
+    #[clap(long = "check_in_secs", default_value_t = 20)]
+    pub check_in_secs: usize,
 }
 
 impl Debug for GithubConfig {
@@ -42,6 +45,7 @@ impl Debug for GithubConfig {
             .field("databend_dsn", &"******")
             .field("llm_max_tokens", &self.llm_max_tokens)
             .field("repos", &self.repos)
+            .field("check_in_secs", &self.check_in_secs)
             .finish()
     }
 }
@@ -53,6 +57,7 @@ impl Default for GithubConfig {
             llm_max_tokens: 100000,
             databend_dsn: "".to_string(),
             repos: None,
+            check_in_secs: 20,
         }
     }
 }

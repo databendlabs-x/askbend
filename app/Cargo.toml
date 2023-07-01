@@ -25,7 +25,7 @@ regex = "1.7.3"
 serde = { version = "1.0.159", features = ["derive"] }
 serfig = "0.0.3"
 anyhow = "^1.0.70"
-octocrab = "0.25.1"
+octocrab = { version = "0.25.1", features = ["timeout", "retry"] }
 proc-macro2 = "1.0"
 quote = "1.0"
 markdown = "0.3.0"
