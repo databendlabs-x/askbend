@@ -55,7 +55,7 @@ impl GithubComment {
                     info!("scan repos: {:?}", repos);
 
                     for repo in repos {
-                        let now = chrono::Utc::now();
+                        let now = Utc::now();
                         info!("Scan repo: {} at {}", repo, now);
 
                         let (owner, repo) = Self::parse_github_repo(repo).unwrap();
@@ -119,7 +119,7 @@ impl GithubComment {
                                 }
                             }
                         }
-                        scan_map.insert(repo.clone(), now);
+                        scan_map.insert(repo.clone(), Utc::now());
                     }
                 }
 
