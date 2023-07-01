@@ -22,7 +22,6 @@ databend-driver = "0.2.23"
 log = "0.4.0"
 env_logger = "0.9.0"
 regex = "1.7.3"
-reqwest = "0.11"
 serde = { version = "1.0.159", features = ["derive"] }
 serfig = "0.0.3"
 anyhow = "^1.0.70"
