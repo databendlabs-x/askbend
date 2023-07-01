@@ -49,7 +49,7 @@ impl GithubComment {
         let keywords = "askbend:summary";
         let conf = self.conf.clone();
         spawn(async move {
-            let now = Utc::now();
+            let mut now = Utc::now();
             let mut scan_map: HashMap<String, DateTime<Utc>> = HashMap::new();
             loop {
                 if let Some(repos) = &conf.github.repos {
@@ -81,10 +81,14 @@ impl GithubComment {
                                 .await
                                 .unwrap();
 
-                            for comment in pr_comments.items {
+                            // Sort.
+                            let mut comments = pr_comments.items.clone();
+                            comments.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+
+                            for comment in comments {
                                 info!(
-                                    "Pr number:{}, Comment ID: {}, Body: {:?}, time:{:?}",
-                                    pr.number, comment.id, comment.body, comment.updated_at
+                                    "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}",
+                                    pr.number, comment.id, comment.body, comment.created_at
                                 );
                                 if comment.body.unwrap() == keywords {
                                     Self::get_octo(&conf)
@@ -116,10 +120,12 @@ impl GithubComment {
                                     } else {
                                         error!("Failed to get summary: {:?}", summary);
                                     }
-                                    scan_map.insert(repo.clone(), comment.created_at);
+                                    break;
                                 }
                             }
                         }
+                        now = Utc::now();
+                        scan_map.insert(repo.clone(), now);
                     }
                 }
 
