@@ -57,6 +57,7 @@ impl GithubComment {
                     for repo in repos {
                         let now = chrono::Utc::now();
                         info!("Scan repo: {} at {}", repo, now);
+
                         let (owner, repo) = Self::parse_github_repo(repo).unwrap();
                         let pull_requests = Self::get_octo(&conf)
                             .pulls(&owner, &repo)
@@ -122,7 +123,7 @@ impl GithubComment {
                     }
                 }
 
-                sleep(Duration::from_secs(10)).await;
+                sleep(Duration::from_secs(conf.github.check_in_secs as u64)).await;
             }
         });
     }
