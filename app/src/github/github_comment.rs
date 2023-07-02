@@ -30,7 +30,6 @@ use log::error;
 use log::info;
 use octocrab::params::State;
 use octocrab::Octocrab;
-use tokio::spawn;
 use tokio::time::sleep;
 use url::Url;
 
@@ -48,70 +47,77 @@ impl GithubComment {
     pub fn start(&self) {
         let keywords = "askbend:summary";
         let conf = self.conf.clone();
-        spawn(async move {
+        tokio::spawn(async move {
             let mut now = Utc::now();
             let mut scan_map: HashMap<String, DateTime<Utc>> = HashMap::new();
             loop {
                 if let Some(repos) = &conf.github.repos {
                     info!("scan repos: {:?}", repos);
 
-                    for repo in repos {
-                        info!("Scan repo: {} at {}", repo, now);
+                    for repo in repos.clone() {
+                        let cloned_conf = conf.clone();
+                        let cloned_repo = repo.clone();
+                        let cloned_keywords = keywords.to_string().clone();
+                        let task_now = now;
+                        let map_clone = scan_map.clone();
+                        let task = tokio::spawn(async move {
+                            info!("Scan repo: {} at {}", cloned_repo, task_now);
 
-                        let (owner, repo) = match Self::parse_github_repo(repo) {
-                            Ok(val) => val,
-                            Err(e) => {
-                                error!("Failed to parse github repo: {:?}", e);
-                                continue;
-                            }
-                        };
-                        let pull_requests = match Self::get_octo(&conf)
-                            .pulls(&owner, &repo)
-                            .list()
-                            .page(1u32)
-                            .per_page(100)
-                            .state(State::Open)
-                            .send()
-                            .await
-                        {
-                            Ok(val) => val,
-                            Err(e) => {
-                                error!("Failed to get pull requests: {:?}", e);
-                                continue;
-                            }
-                        };
+                            let (owner, repo_name) = match Self::parse_github_repo(&cloned_repo) {
+                                Ok(val) => val,
+                                Err(e) => {
+                                    error!("Failed to parse github repo: {:?}", e);
+                                    return;
+                                }
+                            };
 
-                        let since = *scan_map.get(&repo).unwrap_or(&now);
-                        for pr in pull_requests {
-                            let pr_comments = match Self::get_octo(&conf)
-                                .issues(&owner, &repo)
-                                .list_comments(pr.number)
+                            let pull_requests = match Self::get_octo(&cloned_conf)
+                                .pulls(&owner, &repo_name)
+                                .list()
                                 .page(1u32)
                                 .per_page(100)
-                                .since(since)
+                                .state(State::Open)
                                 .send()
                                 .await
                             {
                                 Ok(val) => val,
                                 Err(e) => {
-                                    error!("Failed to list comments: {:?}", e);
-                                    continue;
+                                    error!("Failed to get pull requests: {:?}", e);
+                                    return;
                                 }
                             };
 
-                            // Sort.
-                            let mut comments = pr_comments.items.clone();
-                            comments.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+                            let since = *map_clone.get(&repo_name).unwrap_or(&task_now);
 
-                            for comment in comments {
-                                info!(
-                                    "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}",
-                                    pr.number, comment.id, comment.body, comment.created_at
-                                );
-                                if let Some(body) = comment.body {
-                                    if body == keywords {
-                                        match Self::get_octo(&conf)
-                                            .issues(&owner, &repo)
+                            for pr in pull_requests {
+                                let pr_comments = match Self::get_octo(&cloned_conf)
+                                    .issues(&owner, &repo_name)
+                                    .list_comments(pr.number)
+                                    .page(1u32)
+                                    .per_page(100)
+                                    .since(since)
+                                    .send()
+                                    .await
+                                {
+                                    Ok(val) => val,
+                                    Err(e) => {
+                                        error!("Failed to list comments: {:?}", e);
+                                        return;
+                                    }
+                                };
+
+                                let mut comments = pr_comments.items.clone();
+                                comments.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+
+                                for comment in comments {
+                                    info!(
+                                        "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}",
+                                        pr.number, comment.id, comment.body, comment.created_at
+                                    );
+
+                                    if comment.body == Some(cloned_keywords.clone()) {
+                                        match Self::get_octo(&cloned_conf)
+                                            .issues(&owner, &repo_name)
                                             .create_comment_reaction(
                                                 comment.id,
                                                 octocrab::models::reactions::ReactionContent::PlusOne,
@@ -120,13 +126,17 @@ impl GithubComment {
                                             Ok(_) => {},
                                             Err(e) => {
                                                 error!("Failed to create comment reaction: {:?}", e);
-                                                continue;
+                                                return;
                                             }
                                         };
 
-                                        // Get summary.
-                                        match Self::get_summary(&conf, &owner, &repo, pr.number)
-                                            .await
+                                        match Self::get_summary(
+                                            &cloned_conf,
+                                            &owner,
+                                            &repo_name,
+                                            pr.number,
+                                        )
+                                        .await
                                         {
                                             Ok(summary) => {
                                                 let final_summary = format!(
@@ -134,15 +144,15 @@ impl GithubComment {
                                                     summary
                                                 );
 
-                                                match Self::get_octo(&conf)
-                                                    .issues(&owner, &repo)
+                                                match Self::get_octo(&cloned_conf)
+                                                    .issues(&owner, &repo_name)
                                                     .create_comment(pr.number, final_summary)
                                                     .await
                                                 {
                                                     Ok(_) => {}
                                                     Err(e) => {
                                                         error!("Failed to create comment: {:?}", e);
-                                                        continue;
+                                                        return;
                                                     }
                                                 };
                                             }
@@ -153,12 +163,19 @@ impl GithubComment {
                                     }
                                 }
                             }
+                        });
+
+                        match task.await {
+                            Ok(_) => {}
+                            Err(e) => {
+                                error!("Task panicked with error: {:?}", e);
+                            }
                         }
+
                         now = Utc::now();
                         scan_map.insert(repo.clone(), now);
                     }
                 }
-
                 sleep(Duration::from_secs(conf.github.check_in_secs as u64)).await;
             }
         });
