@@ -58,8 +58,14 @@ impl GithubComment {
                     for repo in repos {
                         info!("Scan repo: {} at {}", repo, now);
 
-                        let (owner, repo) = Self::parse_github_repo(repo).unwrap();
-                        let pull_requests = Self::get_octo(&conf)
+                        let (owner, repo) = match Self::parse_github_repo(repo) {
+                            Ok(val) => val,
+                            Err(e) => {
+                                error!("Failed to parse github repo: {:?}", e);
+                                continue;
+                            }
+                        };
+                        let pull_requests = match Self::get_octo(&conf)
                             .pulls(&owner, &repo)
                             .list()
                             .page(1u32)
@@ -67,11 +73,17 @@ impl GithubComment {
                             .state(State::Open)
                             .send()
                             .await
-                            .unwrap();
+                        {
+                            Ok(val) => val,
+                            Err(e) => {
+                                error!("Failed to get pull requests: {:?}", e);
+                                continue;
+                            }
+                        };
 
                         let since = *scan_map.get(&repo).unwrap_or(&now);
                         for pr in pull_requests {
-                            let pr_comments = Self::get_octo(&conf)
+                            let pr_comments = match Self::get_octo(&conf)
                                 .issues(&owner, &repo)
                                 .list_comments(pr.number)
                                 .page(1u32)
@@ -79,7 +91,13 @@ impl GithubComment {
                                 .since(since)
                                 .send()
                                 .await
-                                .unwrap();
+                            {
+                                Ok(val) => val,
+                                Err(e) => {
+                                    error!("Failed to list comments: {:?}", e);
+                                    continue;
+                                }
+                            };
 
                             // Sort.
                             let mut comments = pr_comments.items.clone();
@@ -90,37 +108,49 @@ impl GithubComment {
                                     "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}",
                                     pr.number, comment.id, comment.body, comment.created_at
                                 );
-                                if comment.body.unwrap() == keywords {
-                                    Self::get_octo(&conf)
-                                        .issues(&owner, &repo)
-                                        .create_comment_reaction(
-                                            comment.id,
-                                            octocrab::models::reactions::ReactionContent::PlusOne,
-                                        )
-                                        .await
-                                        .unwrap();
-
-                                    // Get summary.
-                                    let summary =
-                                        Self::get_summary(&conf, &owner, &repo, pr.number).await;
-
-                                    if summary.is_ok() {
-                                        let final_summary = format!(
-                                            "## PR Summary(By [llmchain.rs](https://github.com/shafishlabs/llmchain.rs)):\n{}",
-                                            summary.unwrap()
-                                        );
-
-                                        Self::get_octo(&conf)
+                                if let Some(body) = comment.body {
+                                    if body == keywords {
+                                        match Self::get_octo(&conf)
                                             .issues(&owner, &repo)
-                                            .create_comment(pr.number, final_summary)
-                                            .await
-                                            .unwrap();
+                                            .create_comment_reaction(
+                                                comment.id,
+                                                octocrab::models::reactions::ReactionContent::PlusOne,
+                                            )
+                                            .await {
+                                            Ok(_) => {},
+                                            Err(e) => {
+                                                error!("Failed to create comment reaction: {:?}", e);
+                                                continue;
+                                            }
+                                        };
 
-                                        break;
-                                    } else {
-                                        error!("Failed to get summary: {:?}", summary);
+                                        // Get summary.
+                                        match Self::get_summary(&conf, &owner, &repo, pr.number)
+                                            .await
+                                        {
+                                            Ok(summary) => {
+                                                let final_summary = format!(
+                                                    "## PR Summary(By [llmchain.rs](https://github.com/shafishlabs/llmchain.rs)):\n{}",
+                                                    summary
+                                                );
+
+                                                match Self::get_octo(&conf)
+                                                    .issues(&owner, &repo)
+                                                    .create_comment(pr.number, final_summary)
+                                                    .await
+                                                {
+                                                    Ok(_) => {}
+                                                    Err(e) => {
+                                                        error!("Failed to create comment: {:?}", e);
+                                                        continue;
+                                                    }
+                                                };
+                                            }
+                                            Err(e) => {
+                                                error!("Failed to get summary: {:?}", e);
+                                            }
+                                        }
                                     }
-                                    break;
                                 }
                             }
                         }
