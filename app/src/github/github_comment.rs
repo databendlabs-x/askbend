@@ -90,6 +90,10 @@ impl GithubComment {
                             let since = *map_clone.get(&repo_name).unwrap_or(&task_now);
 
                             for pr in pull_requests {
+                                info!(
+                                    "Pr html_url:{:?}, title: {:?}, create_at:{:?}",
+                                    pr.html_url, pr.title, pr.created_at
+                                );
                                 let pr_comments = match Self::get_octo(&cloned_conf)
                                     .issues(&owner, &repo_name)
                                     .list_comments(pr.number)
@@ -111,8 +115,12 @@ impl GithubComment {
 
                                 for comment in comments {
                                     info!(
-                                        "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}",
-                                        pr.number, comment.id, comment.body, comment.created_at
+                                        "Pr number:{}, Comment ID: {}, Body: {:?}, create_at:{:?}, url:{:?}",
+                                        pr.number,
+                                        comment.id,
+                                        comment.body,
+                                        comment.created_at,
+                                        comment.issue_url
                                     );
 
                                     if comment.body == Some(cloned_keywords.clone()) {
@@ -122,7 +130,8 @@ impl GithubComment {
                                                 comment.id,
                                                 octocrab::models::reactions::ReactionContent::PlusOne,
                                             )
-                                            .await {
+                                            .await
+                                        {
                                             Ok(_) => {},
                                             Err(e) => {
                                                 error!("Failed to create comment reaction: {:?}", e);
@@ -165,11 +174,8 @@ impl GithubComment {
                             }
                         });
 
-                        match task.await {
-                            Ok(_) => {}
-                            Err(e) => {
-                                error!("Task panicked with error: {:?}", e);
-                            }
+                        if let Err(e) = task.await {
+                            error!("Task panicked with error: {:?}", e);
                         }
 
                         now = Utc::now();
