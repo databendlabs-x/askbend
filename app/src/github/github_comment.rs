@@ -91,8 +91,12 @@ impl GithubComment {
 
                             for pr in pull_requests {
                                 info!(
-                                    "Pr html_url:{:?}, title: {:?}, create_at:{:?}",
-                                    pr.html_url, pr.title, pr.created_at
+                                    "Scan pr {}/{} path:{:?}, title: {:?}, create_at:{:?}",
+                                    owner,
+                                    repo_name,
+                                    pr.html_url.unwrap().path(),
+                                    pr.title,
+                                    pr.created_at
                                 );
                                 let pr_comments = match Self::get_octo(&cloned_conf)
                                     .issues(&owner, &repo_name)
@@ -171,6 +175,7 @@ impl GithubComment {
                                         }
                                     }
                                 }
+                                sleep(Duration::from_millis(100)).await;
                             }
                         });
 
