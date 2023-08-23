@@ -25,7 +25,7 @@ use serde::Serialize;
 #[serde(default, deny_unknown_fields)]
 pub struct QAConfig {
     // path
-    #[clap(long = "data-path", default_value = "data")]
+    #[clap(long = "path", default_value = "data/")]
     pub path: String,
 
     // database
@@ -63,7 +63,7 @@ impl Debug for QAConfig {
 impl Default for QAConfig {
     fn default() -> Self {
         QAConfig {
-            path: "".to_string(),
+            path: "data/".to_string(),
             database: "".to_string(),
             table: "".to_string(),
             answer_table: "".to_string(),
