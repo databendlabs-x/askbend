@@ -15,7 +15,7 @@
 use anyhow::Result;
 use chrono::DateTime;
 use chrono::Utc;
-use databend_driver::new_connection;
+use databend_driver::Client;
 use databend_driver::Connection;
 
 use crate::base::escape_sql_string;
@@ -30,8 +30,9 @@ pub struct QADatabase {
 }
 
 impl QADatabase {
-    pub fn connect(conf: &Config) -> Result<Self> {
-        let conn = new_connection(&conf.qa.dsn)?;
+    pub async fn connect(conf: &Config) -> Result<Self> {
+        let client = Client::new(conf.qa.dsn.clone());
+        let conn = client.get_conn().await?;
         Ok(QADatabase {
             database: conf.qa.database.clone(),
             table: conf.qa.table.clone(),
