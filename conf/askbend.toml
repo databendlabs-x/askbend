@@ -20,6 +20,6 @@ github_token = "your-github-token"
 llm_max_tokens = 100000
 # Data source name (DSN) for connecting to your Databend cloud warehouse
 # https://docs.databend.com/using-databend-cloud/warehouses/connecting-a-warehouse
-dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
+databend_dsn = "databend://<sql-user>:<sql-password>@<your-databend-cloud-warehouse>/default"
 repos = ["your-github-repo"]
 
