@@ -91,18 +91,15 @@ impl Config {
         let mut builder: serfig::Builder<Self> = serfig::Builder::default();
 
         // Load from config file first.
-        {
-            let config_file = if !arg_conf.config_file.is_empty() {
-                arg_conf.config_file.clone()
-            } else if let Ok(path) = env::var("CONFIG_FILE") {
-                path
-            } else {
-                "".to_string()
-            };
-
-            if !arg_conf.config_file.is_empty() {
-                builder = builder.collect(from_file(Toml, &config_file));
-            }
+        let config_file = if !arg_conf.config_file.is_empty() {
+            arg_conf.config_file.clone()
+        } else if let Ok(path) = env::var("CONFIG_FILE") {
+            path
+        } else {
+            "".to_string()
+        };
+        if !config_file.is_empty() {
+            builder = builder.collect(from_file(Toml, &config_file));
         }
 
         // Then, load from env.

@@ -46,6 +46,10 @@ impl APIHandler {
                 ])
                 .max_age(3600);
             for origin in &conf.server.cors {
+                if origin == "*" {
+                    cors = cors.send_wildcard();
+                    break;
+                }
                 cors = cors.allowed_origin(origin);
             }
             App::new()
