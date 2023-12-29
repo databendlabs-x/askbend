@@ -24,7 +24,7 @@ const ProductName: FC<IProps> = ({showSponser}): ReactElement=> {
         showSponser && 
         <span className={styles.sponser}>
         Powered by <a className={styles.link} target="_blank" href="https://www.databend.com" rel="noreferrer">Databend Cloud </a>
-        and <a className={styles.link} target="_blank" href="https://docs.databend.com/sql/sql-functions/ai-functions/" rel="noreferrer">AI Functions</a>
+        and <a className={styles.link} target="_blank" href="https://docs.databend.com/guides/ai-functions/" rel="noreferrer">AI Functions</a>
         </span>
       }
     </div>
